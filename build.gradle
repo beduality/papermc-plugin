@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'net.minecrell.plugin-yml.bukkit' version '0.6.0'
+}
+
+group = "com.luisfuturist"
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://repo.papermc.io/repository/maven-public/"
+    }
+}
+
+dependencies {
+    compileOnly "io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+bukkit {
+    load = "STARTUP"
+    name = "Randomizer"
+    version = project.version
+    main = "com.luisfuturist.randomizer.RandomizerPlugin"
+    description = "A Randomizer UHC plugin"
+    apiVersion = "1.16"
+    author = "Luis Emidio"
+    website = "https://luisfuturist.com"
+}
+
+jar {
+    archiveFileName = "Randomizer-${project.version}.jar"
+}

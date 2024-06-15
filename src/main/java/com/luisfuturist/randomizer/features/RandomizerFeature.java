@@ -10,6 +10,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.luisfuturist.core.models.Feature;
@@ -17,13 +18,17 @@ import com.luisfuturist.randomizer.RandomizerPlugin;
 
 public class RandomizerFeature extends Feature {
 
-    private Map<String, ItemStack> blocks = new HashMap<>();
-    private Map<EntityType, ItemStack> entities = new HashMap<>();
+    private Map<String, ItemStack> drops = new HashMap<>();
 
     private int itemsAddedAmount = 0;
 
     private ItemStack getRandomItemStack() {
         var itemList = RandomizerPlugin.itemManager.getItemList();
+
+        if (itemList.isEmpty()) {
+            return null;
+        }
+
         var max = itemList.size();
         var hasUniqueItemsToAdd = itemsAddedAmount < max;
 
@@ -35,7 +40,7 @@ public class RandomizerFeature extends Feature {
 
         var is = itemList.get(randomInt);
 
-        if (blocks.containsValue(is) || entities.containsValue(is)) {
+        if (drops.containsValue(is)) {
             return getRandomItemStack();
         }
 
@@ -51,12 +56,14 @@ public class RandomizerFeature extends Feature {
 
         material = filterMaterials(material);
 
-        if (!blocks.containsKey(material)) {
-            var is = getRandomItemStack();
-            blocks.put(material, is);
-        }
+        ItemStack is = null;
 
-        var is = blocks.get(material);
+        if (!drops.containsKey(material)) {
+            is = getRandomItemStack();
+            drops.put(material, is);
+        } else {
+            is = drops.get(material);
+        }
 
         if (is == null) {
             return;
@@ -158,8 +165,37 @@ public class RandomizerFeature extends Feature {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         event.setCancelled(true);
 
         breakBlock(event.getBlock());
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (event.getEntity().getType() == EntityType.PLAYER) {
+            return;
+        }
+
+        event.getDrops().clear();
+
+        var entName = event.getEntity().getName();
+        ItemStack is = null;
+
+        if (!drops.containsKey(entName)) {
+            is = getRandomItemStack();
+            drops.put(entName, is);
+        } else {
+            is = drops.get(entName);
+        }
+
+        if (is == null) {
+            return;
+        }
+
+        event.getDrops().add(is);
     }
 }

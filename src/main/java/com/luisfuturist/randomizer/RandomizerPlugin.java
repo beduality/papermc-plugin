@@ -1,22 +1,30 @@
 package com.luisfuturist.randomizer;
 
-import net.kyori.adventure.text.Component;
+import java.util.Random;
+
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.luisfuturist.randomizer.features.RandomizerFeature;
+import com.luisfuturist.randomizer.managers.ItemManager;
 
 public class RandomizerPlugin extends JavaPlugin implements Listener {
 
+    public static JavaPlugin plugin;
+    public static Random random;
+
+    public static ItemManager itemManager;
+
     @Override
     public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(this, this);
-    }
+        saveDefaultConfig();
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendMessage(Component.text("Hello, " + event.getPlayer().getName() + "!"));
-    }
+        plugin = this;
+        random = new Random();
+        
+        itemManager = new ItemManager();
 
+        Bukkit.getPluginManager().registerEvents(new RandomizerFeature(), this);
+    }
 }

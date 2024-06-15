@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.luisfuturist.randomizer.features.RandomizerFeature;
 import com.luisfuturist.randomizer.managers.ItemManager;
+import com.luisfuturist.randomizer.phases.GlobalPhase;
 
 public class RandomizerPlugin extends JavaPlugin implements Listener {
 
@@ -26,5 +27,12 @@ public class RandomizerPlugin extends JavaPlugin implements Listener {
         itemManager = new ItemManager();
 
         Bukkit.getPluginManager().registerEvents(new RandomizerFeature(), this);
+        Bukkit.getPluginManager().registerEvents(new GlobalPhase(), this);
+
+        disableAdvancements();
+    }
+
+    private void disableAdvancements() {
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "gamerule announceAdvancements false");
     }
 }

@@ -20,13 +20,21 @@ public abstract class Feature implements Listener {
     public void onDisable() {
     }
 
-    public void onJoin(Player player) {
+    public void onJoin(User user) {
     }
 
-    public void onLeave(Player player) {
+    public void onLeave(User user) {
     }
 
-    public boolean hasPlayer(Player player) {
-        return phase.getGame().getPlayers().contains(player);
+    public boolean isPlaying(Player player) {
+        return phase.getGame()
+                .getPlayers()
+                .stream()
+                .anyMatch(user -> user.getId()
+                        .equals(player.getUniqueId()));
+    }
+
+    public User getUser(Player player) {
+        return getPhase().getGame().getUser(player);
     }
 }

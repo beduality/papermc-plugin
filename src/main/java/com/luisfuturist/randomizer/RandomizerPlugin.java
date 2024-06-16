@@ -5,6 +5,7 @@ import java.util.Random;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.luisfuturist.randomizer.features.UhcWorldFeature;
 import com.luisfuturist.randomizer.games.GlobalGame;
 import com.luisfuturist.randomizer.games.HubGame;
 import com.luisfuturist.randomizer.games.RandomizerGame;
@@ -33,15 +34,21 @@ public class RandomizerPlugin extends JavaPlugin implements Listener {
         itemManager = new ItemManager();
         locationManager = new LocationManager();
 
-        hub = new HubGame(this, locationManager);
+        loadGames();
+    }
+
+    private void loadGames() {
+        var uhcWorldFeature = new UhcWorldFeature();
+
+        hub = new HubGame(this, locationManager, uhcWorldFeature);
+        game = new RandomizerGame(this, locationManager, hub, uhcWorldFeature);
         global = new GlobalGame(this, hub);
-        game = new RandomizerGame(this, locationManager, hub);
 
-        global.onEnable();
-        hub.onEnable();
         game.onEnable();
+        hub.onEnable();
+        global.onEnable();
 
-        global.start(global.getFirstPhase());
+        //global.start(global.getFirstPhase()); // No first phase needed
         hub.start(hub.getFirstPhase());
         game.start(game.getFirstPhase());
     }

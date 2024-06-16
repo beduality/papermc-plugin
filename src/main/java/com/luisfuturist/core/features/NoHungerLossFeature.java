@@ -10,7 +10,7 @@ public class NoHungerLossFeature extends Feature {
 
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
-        if (!hasPlayer((Player) event.getEntity()))
+        if (!isPlaying((Player) event.getEntity()))
             return;
 
         event.setCancelled(true);

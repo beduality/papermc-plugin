@@ -17,7 +17,7 @@ public class DeathMessagesFeature extends Feature {
     public void onPlayerDeath(PlayerDeathEvent event) {
         var player = (Player) event.getEntity();
 
-        if (!hasPlayer(player)) {
+        if (!isPlaying(player)) {
             return;
         }
 

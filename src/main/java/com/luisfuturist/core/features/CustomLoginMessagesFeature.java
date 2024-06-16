@@ -15,9 +15,8 @@ public class CustomLoginMessagesFeature extends Feature {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
-        player.sendMessage("phase players size: " + getPhase().getGame().getPlayers().size());
-
-        if(!hasPlayer(player)) {
+        
+        if(!isPlaying(player)) {
             return;
         }
 
@@ -36,7 +35,7 @@ public class CustomLoginMessagesFeature extends Feature {
     public void onPlayerQuit(PlayerQuitEvent event) {
         var player = event.getPlayer();
 
-        if(!hasPlayer(player)) {
+        if(!isPlaying(player)) {
             return;
         }
 

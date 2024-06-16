@@ -3,6 +3,7 @@ package com.luisfuturist.core.features;
 import org.bukkit.entity.Player;
 
 import com.luisfuturist.core.models.Feature;
+import com.luisfuturist.core.models.User;
 
 public class ClearInventoryFeature extends Feature {
 
@@ -13,11 +14,13 @@ public class ClearInventoryFeature extends Feature {
     @Override
     public void onEnable() {
         super.onEnable();
-        getPhase().getGame().getPlayers().forEach(this::clearInventory);
+        getPhase().getGame().getPlayers().forEach(user -> {
+            clearInventory(user.getPlayer());
+        });
     }
 
     @Override
-    public void onJoin(Player player) {
-        clearInventory(player);
+    public void onJoin(User user) {
+        clearInventory(user.getPlayer());
     }
 }

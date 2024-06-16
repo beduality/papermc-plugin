@@ -13,24 +13,25 @@ public class NoDamageFeature extends Feature {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
-            if (!hasPlayer(player))
+            if (!isPlaying(player))
                 return;
 
             event.setCancelled(true);
+            player.setFireTicks(0);
         }
     }
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player player) {
-            if (!hasPlayer(player))
+            if (!isPlaying(player))
                 return;
 
             event.setCancelled(true);
         }
 
         if (event.getEntity() instanceof Player player) {
-            if (!hasPlayer(player))
+            if (!isPlaying(player))
                 return;
 
             event.setCancelled(true);
@@ -40,7 +41,7 @@ public class NoDamageFeature extends Feature {
     @EventHandler
     public void onEntityDamageByBlock(EntityDamageByBlockEvent event) {
         if (event.getEntity() instanceof Player player) {
-            if (!hasPlayer(player))
+            if (!isPlaying(player))
                 return;
 
             event.setCancelled(true);

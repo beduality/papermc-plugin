@@ -24,7 +24,6 @@ java {
 }
 
 bukkit {
-    load = "STARTUP"
     name = "Randomizer"
     version = project.version
     main = "com.luisfuturist.randomizer.RandomizerPlugin"

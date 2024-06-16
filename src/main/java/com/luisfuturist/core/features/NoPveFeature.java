@@ -12,7 +12,7 @@ public class NoPveFeature extends Feature {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player player) {
-            if (!hasPlayer(player))
+            if (!isPlaying(player))
                 return;
 
             event.setCancelled(true);
@@ -22,7 +22,7 @@ public class NoPveFeature extends Feature {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player && isDamageSourcePlayerOrMob(event.getCause())) {
-            if (!hasPlayer(player))
+            if (!isPlaying(player))
                 return;
 
             event.setCancelled(true);

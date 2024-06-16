@@ -8,6 +8,7 @@ import com.luisfuturist.core.features.HealthFeature;
 import com.luisfuturist.core.features.NoPveFeature;
 import com.luisfuturist.core.features.RemovePotionEffectsFeature;
 import com.luisfuturist.core.models.Phase;
+import com.luisfuturist.core.models.User;
 import com.luisfuturist.randomizer.features.RandomizerFeature;
 
 public class GracePhase extends Phase {
@@ -32,13 +33,13 @@ public class GracePhase extends Phase {
     public void onStart() {
         super.onStart();
 
-        for (var player : getGame().getPlayers()) {
-            resetPlayer(player);
-        }
+        getGame().getPlayers().forEach(user -> {
+            resetPlayer(user.getPlayer());
+        });
     }
 
     @Override
-    public void onJoin(Player player) {
-        resetPlayer(player);
+    public void onJoin(User user) {
+        resetPlayer(user.getPlayer());
     }
 }

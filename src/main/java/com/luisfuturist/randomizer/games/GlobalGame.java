@@ -1,14 +1,15 @@
 package com.luisfuturist.randomizer.games;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.luisfuturist.core.models.Game;
+import com.luisfuturist.core.models.User;
+import com.luisfuturist.randomizer.RandomizerPlugin;
 import com.luisfuturist.randomizer.phases.GlobalPhase;
 
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class GlobalGame extends Game {
         this.hub = hub;
 
         var globalPhase = createPhase(new GlobalPhase());
-        setFirstPhase(globalPhase);
+        setGlobalPhase(globalPhase);
     }
 
     private void disableAdvancements() {
@@ -42,34 +43,47 @@ public class GlobalGame extends Game {
 
         disableAdvancements();
 
-        Bukkit.getOnlinePlayers().forEach(this::play);
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            addUser(player);
+            play(getUser(player));
+        });
     }
 
     @Override
-    public void play(Player player) {
-        super.play(player);
+    public void play(User user) {
+        joinGlobal(user);
+        super.play(user);
 
         if (hub != null) {
-            hub.play(player);
+            hub.play(user);
         }
     }
 
     @Override
-    public void leave(Player player) {
-        super.leave(player);
+    public void leave(User user) {
+        leaveGlobal(user);
+        super.leave(user);
+
+        RandomizerPlugin.plugin.getLogger().info(getName() + " | leave with players size: " + getPlayers().size());
 
         if (hub != null) {
-            hub.play(player);
+            hub.play(user);
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        play(event.getPlayer());
+        var player = event.getPlayer();
+
+        addUser(player);
+        play(getUser(player));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        leave(event.getPlayer());
+        var user = getUser(event.getPlayer());
+        
+        leave(user);
+        removeUser(user);
     }
 }

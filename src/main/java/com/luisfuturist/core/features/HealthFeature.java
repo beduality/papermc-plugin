@@ -3,6 +3,7 @@ package com.luisfuturist.core.features;
 import org.bukkit.entity.Player;
 
 import com.luisfuturist.core.models.Feature;
+import com.luisfuturist.core.models.User;
 
 public class HealthFeature extends Feature {
 
@@ -15,11 +16,13 @@ public class HealthFeature extends Feature {
     public void onEnable() {
         super.onEnable();
 
-        getPhase().getGame().getPlayers().forEach(this::heal);
+        getPhase().getGame().getPlayers().forEach(user -> {
+            heal(user.getPlayer());
+        });
     }
 
     @Override
-    public void onJoin(Player event) {
-        heal(event.getPlayer());
+    public void onJoin(User user) {
+        heal(user.getPlayer());
     }
 }

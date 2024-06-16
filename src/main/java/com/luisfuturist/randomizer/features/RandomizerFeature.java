@@ -164,7 +164,7 @@ public class RandomizerFeature extends Feature {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled() || !hasPlayer(event.getPlayer())) {
+        if (event.isCancelled() || !isPlaying(event.getPlayer())) {
             return;
         }
 

@@ -3,7 +3,6 @@ package com.luisfuturist.core.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import lombok.AccessLevel;
@@ -50,10 +49,10 @@ public abstract class Phase implements Listener {
     public void onFinish() {
     }
 
-    public void onJoin(Player player) {
+    public void onJoin(User user) {
     }
 
-    public void onLeave(Player player) {
+    public void onLeave(User user) {
     }
 
     public void addFeature(Feature feature) {

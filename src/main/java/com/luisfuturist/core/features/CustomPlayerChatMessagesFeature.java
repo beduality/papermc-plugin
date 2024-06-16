@@ -12,7 +12,7 @@ public class CustomPlayerChatMessagesFeature extends Feature {
 
     @EventHandler
     public void onAsyncChat(AsyncChatEvent event) {
-        if (!hasPlayer(event.getPlayer())) {
+        if (!isPlaying(event.getPlayer())) {
             return;
         }
 

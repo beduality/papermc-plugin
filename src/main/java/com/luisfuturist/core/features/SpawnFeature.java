@@ -1,9 +1,9 @@
 package com.luisfuturist.core.features;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import com.luisfuturist.core.models.Feature;
+import com.luisfuturist.core.models.User;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -22,7 +22,7 @@ public class SpawnFeature extends Feature {
     }
 
     @Override
-    public void onJoin(Player player) {
-        player.teleport(location);
+    public void onJoin(User user) {
+        user.getPlayer().teleport(location);
     }
 }

@@ -6,18 +6,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import com.luisfuturist.core.models.Feature;
-import com.luisfuturist.core.models.Phase;
 
 public class NoPveFeature extends Feature {
-
-    public NoPveFeature(Phase phase) {
-        super(phase);
-    }
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player player) {
-            if(!hasPlayer(player)) return;
+            if (!hasPlayer(player))
+                return;
 
             event.setCancelled(true);
         }
@@ -26,7 +22,8 @@ public class NoPveFeature extends Feature {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player && isDamageSourcePlayerOrMob(event.getCause())) {
-            if(!hasPlayer(player)) return;
+            if (!hasPlayer(player))
+                return;
 
             event.setCancelled(true);
         }

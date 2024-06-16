@@ -1,14 +1,12 @@
 package com.luisfuturist.randomizer.phases;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.luisfuturist.core.Constants;
 import com.luisfuturist.core.features.HealthFeature;
 import com.luisfuturist.core.features.NoPveFeature;
+import com.luisfuturist.core.features.RemovePotionEffectsFeature;
 import com.luisfuturist.core.models.Phase;
 import com.luisfuturist.randomizer.features.RandomizerFeature;
 
@@ -17,9 +15,10 @@ public class GracePhase extends Phase {
     public GracePhase() {
         super("Grace");
         addFeatures(
-                new NoPveFeature(this),
-                new HealthFeature(this),
-                new RandomizerFeature(this));
+                new NoPveFeature(),
+                new HealthFeature(),
+                new RemovePotionEffectsFeature(),
+                new RandomizerFeature());
         setDuration(Constants.TPS * 60 * 5);
         setAllowJoin(true);
     }
@@ -33,7 +32,7 @@ public class GracePhase extends Phase {
     public void onStart() {
         super.onStart();
 
-        for (var player : getPlayers()) {
+        for (var player : getGame().getPlayers()) {
             resetPlayer(player);
         }
     }

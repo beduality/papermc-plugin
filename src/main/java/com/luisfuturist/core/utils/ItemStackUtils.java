@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import com.luisfuturist.randomizer.RandomizerPlugin;
 
 public class ItemStackUtils {
-    
+
     public static ItemStack fromString(String itemString) {
         var parts = itemString.split(":");
         var amount = 1;

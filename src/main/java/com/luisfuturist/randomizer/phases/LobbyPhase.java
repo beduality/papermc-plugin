@@ -12,22 +12,25 @@ import com.luisfuturist.core.features.NoDamageFeature;
 import com.luisfuturist.core.features.NoGriefingFeature;
 import com.luisfuturist.core.features.NoHungerLossFeature;
 import com.luisfuturist.core.models.Phase;
+import com.luisfuturist.randomizer.RandomizerPlugin;
 
 public class LobbyPhase extends Phase {
 
     public LobbyPhase() {
         super("Lobby");
         addFeatures(
-                new NoDamageFeature(this),
-                new NoGriefingFeature(this),
-                new HealthFeature(this),
-                new NoHungerLossFeature(this),
-                new ClearInventoryFeature(this));
+                new NoDamageFeature(),
+                new NoGriefingFeature(),
+                new HealthFeature(),
+                new NoHungerLossFeature(),
+                new ClearInventoryFeature());
         setAllowJoin(true);
     }
 
     public void resetPlayer(Player player) {
+        var locationManager = RandomizerPlugin.locationManager;
         player.setGameMode(GameMode.ADVENTURE);
+        player.teleport(locationManager.getLocation("lobby"));
     }
 
     @Override

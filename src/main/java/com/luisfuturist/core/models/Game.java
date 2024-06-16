@@ -6,35 +6,59 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Getter;
+import lombok.Setter;
 
-public class Game {
-    
-    @Getter private final List<Player> players = new ArrayList<>();
+public class Game implements Listener {
 
-    @Getter private Phase currentPhase;
+    @Getter
+    private final List<Player> players = new ArrayList<>();
+
+    @Getter
+    private Phase currentPhase;
     private Phase globalPhase;
+    @Getter
+    @Setter
+    private Phase firstPhase;
 
     private JavaPlugin plugin;
 
-    @Getter private boolean isRunning;
+    @Getter
+    private boolean isRunning;
+    @Getter
+    private String name;
 
-    public Game(JavaPlugin plugin, Phase globalPhase) {
+    public Game(String name, JavaPlugin plugin) {
+        this.name = name;
+        this.plugin = plugin;
+    }
+
+    public Game(String name, JavaPlugin plugin, Phase globalPhase) {
+        this.name = name;
         this.plugin = plugin;
         this.globalPhase = globalPhase;
     }
 
     public void onEnable() {
-        if(globalPhase != null) {
+        this.currentPhase = firstPhase;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+
+        if (globalPhase != null) {
             Bukkit.getPluginManager().registerEvents(globalPhase, plugin);
         }
     }
 
     public void onDisable() {
-        if(globalPhase != null) {
+        currentPhase = null;
+
+        HandlerList.unregisterAll(this);
+
+        if (globalPhase != null) {
             HandlerList.unregisterAll(globalPhase);
         }
     }
@@ -42,13 +66,15 @@ public class Game {
     public void onStart() {
         isRunning = true;
 
-        plugin.getLogger().info("[RandomizerCore] Game has started.");
+        plugin.getLogger().info("[RandomizerCore] " + getName() + " | Game started.");
     }
 
     public void onFinish() {
         isRunning = false;
 
-        plugin.getLogger().info("[RandomizerCore] Game has ended.");
+        finishCurrentPhase();
+
+        plugin.getLogger().info("[RandomizerCore] " + getName() + " | Game has ended.");
     }
 
     private void finishCurrentPhase() {
@@ -64,7 +90,7 @@ public class Game {
     private void startNextPhase(Phase phase) {
         this.currentPhase = phase;
 
-        for(var feature : phase.getFeatures()) {
+        for (var feature : phase.getFeatures()) {
             Bukkit.getPluginManager().registerEvents(feature, this.plugin);
         }
 
@@ -82,18 +108,22 @@ public class Game {
         nextPhase(phase);
         phase.setRunning(true);
 
-        plugin.getLogger().info("[RandomizerCore] Phase " + phase.getName() + " has begun.");
+        plugin.getLogger().info("[RandomizerCore] " + getName() + " | Phase " + phase.getName() + " has begun.");
+
+        if (!phase.isTimed()) {
+            return;
+        }
 
         new BukkitRunnable() {
             @Override
             public void run() {
                 phase.setRunning(false);
-                plugin.getLogger().info("[RandomizerCore] Phase " + phase.getName() + " has ended.");
+                plugin.getLogger()
+                        .info("[RandomizerCore] " + getName() + " | Phase " + phase.getName() + " has ended.");
 
                 if (phase.getNextPhase() != null) {
                     runPhase(phase.getNextPhase());
                 } else {
-                    finishCurrentPhase();
                     onFinish();
                 }
             }
@@ -112,24 +142,30 @@ public class Game {
     }
 
     public void play(Player player) {
-        if(currentPhase.isAllowJoin()) {
-            players.add(player);
-            
-            currentPhase.onJoin(player);
-            
-            for(var feature : currentPhase.getFeatures()) {
-                feature.onJoin(player);
+        if (currentPhase != null) {
+            if(currentPhase.isAllowJoin()) {
+                players.add(player);
+    
+                currentPhase.onJoin(player);
+    
+                for (var feature : currentPhase.getFeatures()) {
+                    feature.onJoin(player);
+                }
+            } else {
+                plugin.getLogger().warning(getName() + " | It's not allowed to join in phase " + currentPhase.getName());
             }
         }
     }
 
     public void leave(Player player) {
-        players.remove(player);
-            
-        currentPhase.onLeave(player);
-        
-        for(var feature : currentPhase.getFeatures()) {
-            feature.onLeave(player);
+        if (currentPhase != null) {
+            players.remove(player);
+
+            currentPhase.onLeave(player);
+
+            for (var feature : currentPhase.getFeatures()) {
+                feature.onLeave(player);
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ public class ItemManager {
     public ItemManager() {
         reloadItemList();
     }
-    
+
     private void reloadItemList() {
         itemList.clear();
 

@@ -10,12 +10,18 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.luisfuturist.core.models.Phase;
+
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
-public class GlobalPhase implements Listener {
+public class GlobalPhase extends Phase {
+
+    public GlobalPhase() {
+        super("Global");
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {

@@ -14,13 +14,17 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.luisfuturist.core.models.Feature;
+import com.luisfuturist.core.models.Phase;
 import com.luisfuturist.randomizer.RandomizerPlugin;
 
 public class RandomizerFeature extends Feature {
 
     private Map<String, ItemStack> drops = new HashMap<>();
-
     private int itemsAddedAmount = 0;
+
+    public RandomizerFeature(Phase phase) {
+        super(phase);
+    }
 
     private ItemStack getRandomItemStack() {
         var itemList = RandomizerPlugin.itemManager.getItemList();
@@ -165,7 +169,7 @@ public class RandomizerFeature extends Feature {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled()) {
+        if (event.isCancelled() || !hasPlayer(event.getPlayer())) {
             return;
         }
 

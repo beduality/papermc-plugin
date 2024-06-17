@@ -7,16 +7,15 @@ import com.luisfuturist.core.managers.LocationManager;
 import com.luisfuturist.core.models.Game;
 import com.luisfuturist.core.phases.LobbyPhase;
 import com.luisfuturist.hub.features.PlayItemFeature;
-import com.luisfuturist.randomizer.features.UhcWorldFeature;
 
 public class HubGame extends Game {
 
-    public HubGame(JavaPlugin plugin, LocationManager locationManager, UhcWorldFeature uhcWorldFeature) {
+    public HubGame(JavaPlugin plugin, LocationManager locationManager) {
         super("Hub", plugin);
 
         var lobbyPhase = createPhase(new LobbyPhase());
         lobbyPhase.setTimed(false);
-        lobbyPhase.addFeature(new PlayItemFeature(uhcWorldFeature));
+        lobbyPhase.addFeature(new PlayItemFeature());
 
         var lobbyLocation = locationManager.getLocation("lobby");
         

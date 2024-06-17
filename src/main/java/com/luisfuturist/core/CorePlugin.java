@@ -5,13 +5,10 @@ import java.util.Random;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.luisfuturist.core.games.GlobalGame;
 import com.luisfuturist.core.managers.ItemManager;
 import com.luisfuturist.core.managers.LocationManager;
 import com.luisfuturist.core.managers.UserManager;
-import com.luisfuturist.hub.games.HubGame;
-import com.luisfuturist.randomizer.features.UhcWorldFeature;
-import com.luisfuturist.randomizer.games.RandomizerGame;
+import com.luisfuturist.core.models.Orchestrator;
 
 public class CorePlugin extends JavaPlugin implements Listener {
 
@@ -22,9 +19,7 @@ public class CorePlugin extends JavaPlugin implements Listener {
     public static ItemManager itemManager;
     public static LocationManager locationManager;
 
-    public static GlobalGame global;
-    public static HubGame hub;
-    public static RandomizerGame game;
+    public static Orchestrator orchestrator;
 
     @Override
     public void onEnable() {
@@ -37,35 +32,12 @@ public class CorePlugin extends JavaPlugin implements Listener {
         itemManager = new ItemManager();
         locationManager = new LocationManager();
 
-        loadGames();
-    }
-
-    private void loadGames() {
-        var uhcWorldFeature = new UhcWorldFeature();
-
-        hub = new HubGame(this, locationManager, uhcWorldFeature);
-        game = new RandomizerGame(this, locationManager, hub, uhcWorldFeature);
-        global = new GlobalGame(this, hub);
-
-        game.onEnable();
-        hub.onEnable();
-        global.onEnable();
-
-        //global.start(global.getFirstPhase()); // No first phase needed
-        hub.start(hub.getFirstPhase());
-        game.start(game.getFirstPhase());
+        orchestrator = new MainOrchestrator(plugin, locationManager);
+        orchestrator.onEnable();
     }
 
     @Override
     public void onDisable() {
-        if (global != null) {
-            global.onDisable();
-        }
-        if (game != null) {
-            game.onDisable();
-        }
-        if (hub != null) {
-            hub.onDisable();
-        }
+        orchestrator.onDisable();
     }
 }

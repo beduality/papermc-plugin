@@ -1,8 +1,6 @@
 package com.luisfuturist.hub.features;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -10,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.luisfuturist.core.models.Feature;
 import com.luisfuturist.core.models.User;
-import com.luisfuturist.randomizer.features.UhcWorldFeature;
 
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
@@ -20,8 +17,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 public class PlayItemFeature extends Feature {
 
     private final Component ITEM_NAME = Component.text("Play").color(NamedTextColor.YELLOW);
-
-    private UhcWorldFeature uhcWorldFeature;
 
     @Override
     public void onEnable() {
@@ -35,10 +30,10 @@ public class PlayItemFeature extends Feature {
     @Override
     public void onJoin(User user) {
         super.onJoin(user);
-        
+
         giveMenuItem(user.getPlayer());
     }
-    
+
     private void giveMenuItem(Player player) {
         var menuIs = new ItemStack(Material.GOLDEN_APPLE, 1);
         var meta = menuIs.getItemMeta();
@@ -49,7 +44,7 @@ public class PlayItemFeature extends Feature {
 
         player.getInventory().addItem(menuIs);
     }
-    
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         var player = event.getPlayer();
@@ -60,26 +55,36 @@ public class PlayItemFeature extends Feature {
 
         ItemStack item = event.getItem();
 
-        if (item == null || !item.hasItemMeta()) {
+        if (item == null || !item.hasItemMeta() || !event.getAction().isRightClick()) {
             return;
         }
-        
-        if(item.getItemMeta().displayName().equals(ITEM_NAME)) {
+
+        if (item.getItemMeta().displayName().equals(ITEM_NAME)) {
             event.setCancelled(true);
-            player.sendMessage("Clicked");
-            var world = uhcWorldFeature.getWorld();
 
-            if(world == null) {
-                player.sendMessage("World is not available yet.");
-                return;
-            }
+            var user = getUser(player);
 
-            teleport(player, world);
+            var orchestrator = getPhase().getGame().getOrchestrator();
+            orchestrator.join(user, "Randomizer");
+
+            var joinMessage = Component.text("You have joined the UHC minigame.")
+                    .color(NamedTextColor.YELLOW);
+
+            player.sendMessage(joinMessage);
         }
     }
 
-    private void teleport(Player player, World world) {
-        var highestY = world.getHighestBlockYAt(0, 0);
-        player.teleport(new Location(world, 0, highestY, 0));
-    }
+    // private void teleport(Player player, World world) {
+    // // var world = uhcWorldFeature.getWorld();
+
+    // // if(world == null) {
+    // // player.sendMessage("World is not available yet.");
+    // // return;
+    // // }
+
+    // // teleport(player, world);
+
+    // var highestY = world.getHighestBlockYAt(0, 0);
+    // player.teleport(new Location(world, 0, highestY, 0));
+    // }
 }

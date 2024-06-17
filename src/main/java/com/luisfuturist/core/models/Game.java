@@ -10,11 +10,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-public class Game implements Listener {
+public class Game implements Listener, Handler {
+
+    private @Getter @Setter(value = AccessLevel.PROTECTED) Orchestrator orchestrator;
 
     private final Set<User> playerSet = new HashSet<>();
 
@@ -62,6 +65,7 @@ public class Game implements Listener {
         }
     }
 
+    @Override
     public void onEnable() {
         currentPhase = firstPhase;
 
@@ -72,6 +76,7 @@ public class Game implements Listener {
         }
     }
 
+    @Override
     public void onDisable() {
         currentPhase = null;
 

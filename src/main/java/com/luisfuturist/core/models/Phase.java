@@ -9,7 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class Phase implements Listener {
+public abstract class Phase implements Listener, Joinable {
 
     @Getter
     private String name;
@@ -49,9 +49,11 @@ public abstract class Phase implements Listener {
     public void onFinish() {
     }
 
+    @Override
     public void onJoin(User user) {
     }
 
+    @Override
     public void onLeave(User user) {
     }
 

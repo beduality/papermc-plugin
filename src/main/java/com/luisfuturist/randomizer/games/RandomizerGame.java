@@ -55,9 +55,5 @@ public class RandomizerGame extends Game {
     @Override
     public void onDisable() {
         super.onDisable();
-
-        getPlayers().forEach(player -> {
-
-        });
     }
 }

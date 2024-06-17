@@ -13,16 +13,16 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.luisfuturist.core.CorePlugin;
 import com.luisfuturist.core.models.Feature;
-import com.luisfuturist.randomizer.RandomizerPlugin;
 
-public class RandomizerFeature extends Feature {
+public class RandomDropFeature extends Feature {
 
     private Map<String, ItemStack> drops = new HashMap<>();
     private int itemsAddedAmount = 0;
 
     private ItemStack getRandomItemStack() {
-        var itemList = RandomizerPlugin.itemManager.getItemList();
+        var itemList = CorePlugin.itemManager.getItemList();
 
         if (itemList.isEmpty()) {
             return null;
@@ -35,7 +35,7 @@ public class RandomizerFeature extends Feature {
             return null;
         }
 
-        int randomInt = RandomizerPlugin.random.nextInt(max);
+        int randomInt = CorePlugin.random.nextInt(max);
 
         var is = itemList.get(randomInt);
 

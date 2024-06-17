@@ -1,10 +1,9 @@
 package com.luisfuturist.core.features;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.Bukkit;
 
 import com.luisfuturist.core.models.Feature;
+import com.luisfuturist.core.models.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -12,13 +11,9 @@ import net.kyori.adventure.text.format.TextDecoration;
 
 public class CustomLoginMessagesFeature extends Feature {
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        var player = event.getPlayer();
-        
-        if(!isPlaying(player)) {
-            return;
-        }
+    @Override
+    public void onJoin(User user) {
+        var player = user.getPlayer();
 
         Component joinMessage = Component.text("Hooray! ")
                 .color(NamedTextColor.GOLD)
@@ -28,16 +23,12 @@ public class CustomLoginMessagesFeature extends Feature {
                 .append(Component.text(" has joined us!")
                         .color(NamedTextColor.GOLD));
 
-        event.joinMessage(joinMessage);
+        Bukkit.broadcast(joinMessage);
     }
 
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        var player = event.getPlayer();
-
-        if(!isPlaying(player)) {
-            return;
-        }
+    @Override
+    public void onLeave(User user) {
+        var player = user.getPlayer();
 
         Component quitMessage = Component.text(player.getName())
                 .color(NamedTextColor.RED)
@@ -45,6 +36,6 @@ public class CustomLoginMessagesFeature extends Feature {
                 .append(Component.text(" has logged off. We hope to see you soon!")
                         .color(NamedTextColor.YELLOW));
 
-        event.quitMessage(quitMessage);
+        Bukkit.broadcast(quitMessage);
     }
 }

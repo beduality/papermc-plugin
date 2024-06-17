@@ -1,12 +1,12 @@
-package com.luisfuturist.randomizer.managers;
+package com.luisfuturist.core.managers;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Location;
 
+import com.luisfuturist.core.CorePlugin;
 import com.luisfuturist.core.utils.LocationUtils;
-import com.luisfuturist.randomizer.RandomizerPlugin;
 
 public class LocationManager {
 
@@ -19,10 +19,10 @@ public class LocationManager {
     private void reloadLocationMap() {
         locationMap.clear();
 
-        var config = RandomizerPlugin.plugin.getConfig();
+        var config = CorePlugin.plugin.getConfig();
 
         if (!config.contains("locations", true)) {
-            RandomizerPlugin.plugin.getLogger().warning("No 'locations' section found in the config.");
+            CorePlugin.plugin.getLogger().warning("No 'locations' section found in the config.");
             return;
         }
 
@@ -35,7 +35,7 @@ public class LocationManager {
                 location = LocationUtils.fromString(locationLine);
                 locationMap.put(key, location);
             } catch (Exception e) {
-                RandomizerPlugin.plugin.getLogger()
+                CorePlugin.plugin.getLogger()
                         .warning(e.getMessage());
             }
         }

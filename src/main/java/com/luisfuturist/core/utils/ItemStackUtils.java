@@ -3,7 +3,7 @@ package com.luisfuturist.core.utils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import com.luisfuturist.randomizer.RandomizerPlugin;
+import com.luisfuturist.core.CorePlugin;
 
 public class ItemStackUtils {
 
@@ -15,7 +15,7 @@ public class ItemStackUtils {
             try {
                 amount = Integer.parseInt(parts[1]);
             } catch (IllegalArgumentException e) {
-                RandomizerPlugin.plugin.getLogger().warning("Invalid item amount format in config: " + itemString);
+                CorePlugin.plugin.getLogger().warning("Invalid item amount format in config: " + itemString);
             }
         }
 
@@ -25,7 +25,7 @@ public class ItemStackUtils {
 
             return itemStack;
         } catch (IllegalArgumentException e) {
-            RandomizerPlugin.plugin.getLogger().warning("Invalid material data format in config: " + itemString);
+            CorePlugin.plugin.getLogger().warning("Invalid material data format in config: " + itemString);
             return null;
         }
     }

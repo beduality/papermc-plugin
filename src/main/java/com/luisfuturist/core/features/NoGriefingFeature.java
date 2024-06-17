@@ -25,7 +25,7 @@ public class NoGriefingFeature extends Feature {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        event.getPlayer().sendMessage(getPhase().getGame().getName() + " | players size: " + getPhase().getGame().getPlayers().size());
+        event.getPlayer().sendMessage(getPhase().getGame().getName() + " | game players size: " + getPhase().getGame().getPlayers().size());
         
         if (isPlaying(event.getPlayer())) {
             event.setCancelled(true);

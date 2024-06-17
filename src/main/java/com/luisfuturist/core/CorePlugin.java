@@ -1,28 +1,30 @@
-package com.luisfuturist.randomizer;
+package com.luisfuturist.core;
 
 import java.util.Random;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.luisfuturist.core.games.GlobalGame;
+import com.luisfuturist.core.managers.ItemManager;
+import com.luisfuturist.core.managers.LocationManager;
+import com.luisfuturist.core.managers.UserManager;
+import com.luisfuturist.hub.games.HubGame;
 import com.luisfuturist.randomizer.features.UhcWorldFeature;
-import com.luisfuturist.randomizer.games.GlobalGame;
-import com.luisfuturist.randomizer.games.HubGame;
 import com.luisfuturist.randomizer.games.RandomizerGame;
-import com.luisfuturist.randomizer.managers.ItemManager;
-import com.luisfuturist.randomizer.managers.LocationManager;
 
-public class RandomizerPlugin extends JavaPlugin implements Listener {
+public class CorePlugin extends JavaPlugin implements Listener {
 
     public static JavaPlugin plugin;
     public static Random random;
 
+    public static UserManager userManager;
     public static ItemManager itemManager;
     public static LocationManager locationManager;
 
     public static GlobalGame global;
-    public static RandomizerGame game;
     public static HubGame hub;
+    public static RandomizerGame game;
 
     @Override
     public void onEnable() {
@@ -31,6 +33,7 @@ public class RandomizerPlugin extends JavaPlugin implements Listener {
         plugin = this;
         random = new Random();
 
+        userManager = new UserManager();
         itemManager = new ItemManager();
         locationManager = new LocationManager();
 

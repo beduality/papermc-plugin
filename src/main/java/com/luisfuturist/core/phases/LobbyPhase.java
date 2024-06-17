@@ -1,4 +1,4 @@
-package com.luisfuturist.randomizer.phases;
+package com.luisfuturist.core.phases;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -6,13 +6,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import com.luisfuturist.core.CorePlugin;
 import com.luisfuturist.core.features.ClearInventoryFeature;
 import com.luisfuturist.core.features.HealthFeature;
 import com.luisfuturist.core.features.NoDamageFeature;
 import com.luisfuturist.core.features.NoGriefingFeature;
 import com.luisfuturist.core.features.NoHungerLossFeature;
 import com.luisfuturist.core.models.Phase;
-import com.luisfuturist.randomizer.RandomizerPlugin;
 
 public class LobbyPhase extends Phase {
 
@@ -28,7 +28,7 @@ public class LobbyPhase extends Phase {
     }
 
     public void resetPlayer(Player player) {
-        var locationManager = RandomizerPlugin.locationManager;
+        var locationManager = CorePlugin.locationManager;
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(locationManager.getLocation("lobby"));
     }

@@ -1,4 +1,4 @@
-package com.luisfuturist.randomizer.phases;
+package com.luisfuturist.core.phases;
 
 import com.luisfuturist.core.features.CustomLoginMessagesFeature;
 import com.luisfuturist.core.features.CustomPlayerChatMessagesFeature;

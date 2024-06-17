@@ -1,13 +1,13 @@
-package com.luisfuturist.randomizer.games;
+package com.luisfuturist.hub.games;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.luisfuturist.core.features.SpawnFeature;
+import com.luisfuturist.core.managers.LocationManager;
 import com.luisfuturist.core.models.Game;
-import com.luisfuturist.randomizer.features.PlayItemFeature;
+import com.luisfuturist.core.phases.LobbyPhase;
+import com.luisfuturist.hub.features.PlayItemFeature;
 import com.luisfuturist.randomizer.features.UhcWorldFeature;
-import com.luisfuturist.randomizer.managers.LocationManager;
-import com.luisfuturist.randomizer.phases.LobbyPhase;
 
 public class HubGame extends Game {
 

@@ -30,11 +30,17 @@ public abstract class Feature implements Listener {
         return phase.getGame()
                 .getPlayers()
                 .stream()
-                .anyMatch(user -> user.getId()
+                .anyMatch(user -> user.getPlayer().getUniqueId()
                         .equals(player.getUniqueId()));
     }
 
     public User getUser(Player player) {
-        return getPhase().getGame().getUser(player);
+        return getPhase()
+                .getGame()
+                .getPlayers()
+                .stream()
+                .filter(u -> u.getPlayer().getUniqueId().equals(player.getUniqueId()))
+                .findAny()
+                .orElse(null);
     }
 }

@@ -1,18 +1,14 @@
 package com.luisfuturist.core.models;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.luisfuturist.randomizer.RandomizerPlugin;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -20,7 +16,7 @@ import lombok.Setter;
 
 public class Game implements Listener {
 
-    private final List<User> playerList = new ArrayList<>();
+    private final Set<User> playerSet = new HashSet<>();
 
     @Getter
     private Phase currentPhase;
@@ -44,46 +40,7 @@ public class Game implements Listener {
     }
 
     public Set<User> getPlayers() {
-        return new HashSet<>(playerList); // Return a copy to prevent modification outside
-    }
-
-    public User getUser(Player player) {
-        for (User user : playerList) {
-            if (user.getId().equals(player.getUniqueId())) {
-                return user;
-            }
-        }
-
-        return null;
-    }
-
-    public boolean addUser(Player player) {
-        var playerId = player.getUniqueId();
-
-        for (User user : playerList) {
-            if (user.getId().equals(playerId)) {
-                return false;
-            }
-        }
-
-        return playerList.add(new User(playerId, player));
-    }
-
-    public boolean addUser(User user) {
-        var playerId = user.getId();
-
-        for (User u : playerList) {
-            if (u.getId().equals(playerId)) {
-                RandomizerPlugin.plugin.getLogger().info("already added");
-                return false;
-            }
-        }
-
-        return playerList.add(new User(playerId, user.getPlayer()));
-    }
-
-    public boolean removeUser(User user) {
-        return playerList.remove(user);
+        return new HashSet<>(playerSet); // Return a copy to prevent modification outside
     }
 
     public Phase createPhase(Phase phase) {
@@ -202,7 +159,7 @@ public class Game implements Listener {
     }
 
     private void joinPhase(User user, Phase phase) {
-        addUser(user);
+        playerSet.add(user);
 
         phase.onJoin(user);
 
@@ -212,7 +169,7 @@ public class Game implements Listener {
     }
 
     private void leavePhase(User user, Phase phase) {
-        playerList.remove(user);
+        playerSet.remove(user);
 
         phase.onLeave(user);
 

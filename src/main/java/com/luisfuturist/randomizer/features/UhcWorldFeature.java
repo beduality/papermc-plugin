@@ -6,8 +6,8 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 
+import com.luisfuturist.core.CorePlugin;
 import com.luisfuturist.core.models.Feature;
-import com.luisfuturist.randomizer.RandomizerPlugin;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -38,7 +38,7 @@ public class UhcWorldFeature extends Feature {
         World world = Bukkit.getWorld(worldName);
 
         if (world == null) {
-            RandomizerPlugin.plugin.getLogger().warning("UhcWorldFeature | World " + worldName + " does not exist.");
+            CorePlugin.plugin.getLogger().warning("UhcWorldFeature | World " + worldName + " does not exist.");
             return false;
         }
 
@@ -50,9 +50,9 @@ public class UhcWorldFeature extends Feature {
         boolean success = Bukkit.unloadWorld(world, true);
 
         if (success) {
-            RandomizerPlugin.plugin.getLogger().info("UhcWorldFeature | Successfully unloaded world: " + worldName);
+            CorePlugin.plugin.getLogger().info("UhcWorldFeature | Successfully unloaded world: " + worldName);
         } else {
-            RandomizerPlugin.plugin.getLogger().severe("UhcWorldFeature | Failed to unload world: " + worldName);
+            CorePlugin.plugin.getLogger().severe("UhcWorldFeature | Failed to unload world: " + worldName);
         }
 
         return success;
@@ -62,7 +62,7 @@ public class UhcWorldFeature extends Feature {
         world = Bukkit.getWorld(worldName);
 
         if (world != null) {
-            RandomizerPlugin.plugin.getLogger().info("UhcWorldFeature | World " + worldName + " already exists.");
+            CorePlugin.plugin.getLogger().info("UhcWorldFeature | World " + worldName + " already exists.");
             return;
         }
 
@@ -70,14 +70,14 @@ public class UhcWorldFeature extends Feature {
         worldCreator.environment(World.Environment.NORMAL);
         worldCreator.type(WorldType.NORMAL);
 
-        RandomizerPlugin.plugin.getLogger().info("UhcWorldFeature | Creating overworld: " + worldName);
+        CorePlugin.plugin.getLogger().info("UhcWorldFeature | Creating overworld: " + worldName);
 
         world = worldCreator.createWorld();
 
         if (world != null) {
-            RandomizerPlugin.plugin.getLogger().info("UhcWorldFeature | Successfully created overworld: " + worldName);
+            CorePlugin.plugin.getLogger().info("UhcWorldFeature | Successfully created overworld: " + worldName);
         } else {
-            RandomizerPlugin.plugin.getLogger().severe("UhcWorldFeature | Failed to create overworld: " + worldName);
+            CorePlugin.plugin.getLogger().severe("UhcWorldFeature | Failed to create overworld: " + worldName);
         }
     }
 }

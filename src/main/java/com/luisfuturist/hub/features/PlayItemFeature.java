@@ -1,4 +1,4 @@
-package com.luisfuturist.randomizer.features;
+package com.luisfuturist.hub.features;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.luisfuturist.core.models.Feature;
 import com.luisfuturist.core.models.User;
+import com.luisfuturist.randomizer.features.UhcWorldFeature;
 
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;

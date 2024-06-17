@@ -9,7 +9,7 @@ import com.luisfuturist.core.features.NoPveFeature;
 import com.luisfuturist.core.features.RemovePotionEffectsFeature;
 import com.luisfuturist.core.models.Phase;
 import com.luisfuturist.core.models.User;
-import com.luisfuturist.randomizer.features.RandomizerFeature;
+import com.luisfuturist.randomizer.features.RandomDropFeature;
 
 public class GracePhase extends Phase {
 
@@ -19,7 +19,7 @@ public class GracePhase extends Phase {
                 new NoPveFeature(),
                 new HealthFeature(),
                 new RemovePotionEffectsFeature(),
-                new RandomizerFeature());
+                new RandomDropFeature());
         setDuration(Constants.TPS * 60 * 5);
         setAllowJoin(true);
     }

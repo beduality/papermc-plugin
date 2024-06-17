@@ -1,4 +1,4 @@
-package com.luisfuturist.randomizer.managers;
+package com.luisfuturist.core.managers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
+import com.luisfuturist.core.CorePlugin;
 import com.luisfuturist.core.utils.ItemStackUtils;
-import com.luisfuturist.randomizer.RandomizerPlugin;
 
 public class ItemManager {
 
@@ -20,7 +20,7 @@ public class ItemManager {
     private void reloadItemList() {
         itemList.clear();
 
-        FileConfiguration config = RandomizerPlugin.plugin.getConfig();
+        FileConfiguration config = CorePlugin.plugin.getConfig();
         List<String> itemNames = config.getStringList("items");
 
         for (String itemName : itemNames) {

@@ -1,12 +1,8 @@
 package com.luisfuturist.core.phases;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.luisfuturist.core.CorePlugin;
 import com.luisfuturist.core.features.ClearInventoryFeature;
@@ -17,6 +13,7 @@ import com.luisfuturist.core.features.NoHungerLossFeature;
 import com.luisfuturist.core.features.NoTimeChangeFeature;
 import com.luisfuturist.core.features.NoWeatherChangeFeature;
 import com.luisfuturist.core.models.Phase;
+import com.luisfuturist.core.models.User;
 
 public class LobbyPhase extends Phase {
 
@@ -38,9 +35,12 @@ public class LobbyPhase extends Phase {
                 new NoWeatherChangeFeature(world, WeatherType.CLEAR),
                 new ClearInventoryFeature());
         setAllowJoin(true);
+        setAllowSpectate(false);
     }
 
-    public void resetPlayer(Player player) {
+    public void resetPlayer(User user) {
+        var player = user.getPlayer();
+
         var locationManager = CorePlugin.locationManager;
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(locationManager.getLocation("lobby"));
@@ -51,12 +51,12 @@ public class LobbyPhase extends Phase {
         super.onStart();
 
         getGame().getPlayers().forEach(user -> {
-            resetPlayer(user.getPlayer());
+            resetPlayer(user);
         });
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        resetPlayer(event.getPlayer());
+    @Override
+    public void onJoin(User user) {
+        resetPlayer(user);
     }
 }

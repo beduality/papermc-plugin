@@ -1,4 +1,4 @@
-package com.luisfuturist.randomizer.phases;
+package com.luisfuturist.core.phases;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;

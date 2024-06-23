@@ -53,8 +53,8 @@ public class Game implements Listener, Handler {
 
     private void enableFeatures(List<Feature> features) {
         for (var feature : features) {
+            Bukkit.getPluginManager().registerEvents(feature, plugin);
             feature.onEnable();
-            Bukkit.getPluginManager().registerEvents(feature, this.plugin);
         }
     }
 
@@ -70,7 +70,7 @@ public class Game implements Listener, Handler {
         currentPhase = firstPhase;
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
-
+        
         if (globalPhase != null) {
             enablePhase(globalPhase);
         }
@@ -80,11 +80,11 @@ public class Game implements Listener, Handler {
     public void onDisable() {
         currentPhase = null;
 
-        HandlerList.unregisterAll(this);
-
         if (globalPhase != null) {
             disablePhase(globalPhase);
         }
+
+        HandlerList.unregisterAll(this);
     }
 
     public void onStart() {
@@ -96,13 +96,13 @@ public class Game implements Listener, Handler {
     public void onFinish() {
         isRunning = false;
 
-        finishCurrentPhase();
+        disableCurrentPhase();
 
         plugin.getLogger().info("Core | " + getName() + " | Game has ended.");
     }
 
     private void enablePhase(Phase phase) {
-        Bukkit.getPluginManager().registerEvents(phase, this.plugin);
+        Bukkit.getPluginManager().registerEvents(phase, plugin);
         enableFeatures(phase.getFeatures());
         phase.onStart();
     }
@@ -113,20 +113,36 @@ public class Game implements Listener, Handler {
         HandlerList.unregisterAll(phase);
     }
 
-    private void finishCurrentPhase() {
+    private void disableCurrentPhase() {
         if (currentPhase != null) {
             disablePhase(currentPhase);
         }
     }
 
-    private void startNextPhase(@NonNull Phase phase) {
+    private void enableNextPhase(@NonNull Phase phase) {
         this.currentPhase = phase;
         enablePhase(phase);
     }
 
     private void nextPhase(Phase phase) {
-        finishCurrentPhase();
-        startNextPhase(phase);
+        disableCurrentPhase();
+        enableNextPhase(phase);
+    }
+
+    public void finishCurrentPhase() {
+        finishPhase(currentPhase);
+    }
+
+    private void finishPhase(Phase phase) {
+        phase.setRunning(false);
+        plugin.getLogger()
+                .info("Core | " + getName() + " | Phase " + phase.getName() + " has ended.");
+
+        if (phase.getNextPhase() != null) {
+            runPhase(phase.getNextPhase());
+        } else {
+            onFinish();
+        }
     }
 
     private void runPhase(Phase phase) {
@@ -142,15 +158,7 @@ public class Game implements Listener, Handler {
         new BukkitRunnable() {
             @Override
             public void run() {
-                phase.setRunning(false);
-                plugin.getLogger()
-                        .info("Core | " + getName() + " | Phase " + phase.getName() + " has ended.");
-
-                if (phase.getNextPhase() != null) {
-                    runPhase(phase.getNextPhase());
-                } else {
-                    onFinish();
-                }
+                finishPhase(phase);
             }
         }.runTaskLater(plugin, phase.getDuration());
     }
@@ -161,6 +169,10 @@ public class Game implements Listener, Handler {
         if (firstPhase != null) {
             runPhase(firstPhase);
         }
+    }
+
+    public void finish() {
+        onFinish();
     }
 
     private void joinPhase(User user, Phase phase) {
@@ -210,5 +222,9 @@ public class Game implements Listener, Handler {
         }
 
         leavePhase(user, currentPhase);
+    }
+
+    public boolean isPlaying(User user) {
+        return playerSet.contains(user);
     }
 }

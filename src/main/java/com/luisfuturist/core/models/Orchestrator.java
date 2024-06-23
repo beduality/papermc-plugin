@@ -8,45 +8,61 @@ import lombok.Setter;
 
 public class Orchestrator implements Handler {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private Game global;
-    @Getter @Setter
+    @Getter
+    @Setter
     private Game hub;
 
     private HashMap<String, Game> games = new HashMap<>();
 
     @Override
     public void onEnable() {
-        for(var game : games.values()) {
+        for (var game : games.values())
             game.onEnable();
+
+        var toEnable = new Game[] { hub, global };
+
+        for (var o : toEnable) {
+            if (o != null)
+                o.onEnable();
         }
 
-        hub.onEnable();
-        global.onEnable();
+        var toStart = new Game[] { global, hub };
 
-        global.start(global.getFirstPhase());
-        hub.start(hub.getFirstPhase());
+        for (var o : toStart) {
+            if (o != null)
+                o.start(o.getFirstPhase());
+        }
 
-        for(var game : games.values()) {
+        for (var game : games.values())
             game.start(game.getFirstPhase());
-        }
     }
 
     @Override
     public void onDisable() {
-        if (global != null) {
-            global.onDisable();
-        }
+        for (var game : games.values())
+            game.finish();
 
-        for(var game : games.values()) {
-            game.start(game.getFirstPhase());
-        }
-
-        if (hub != null) {
-            hub.onDisable();
-        }
+        for (var game : games.values())
+            game.onDisable();
 
         games.clear();
+
+        var toFinish = new Game[] { hub, global };
+
+        for (var o : toFinish) {
+            if (o != null)
+                o.finish();
+        }
+
+        var toDisable = new Game[] { hub, global };
+
+        for (var o : toDisable) {
+            if (o != null)
+                o.onDisable();
+        }
     }
 
     public Game createGame(Game game) {
@@ -72,13 +88,33 @@ public class Orchestrator implements Handler {
         return new HashMap<>(games);
     }
 
+    public boolean isPlaying(User user, String gameName) {
+        var game = games.get(gameName);
+
+        if (game == null) {
+            throw new NullPointerException("Game not found: " + gameName);
+        }
+
+        return game.isPlaying(user);
+    }
+
     public void join(User user, String gameName) {
         var game = games.get(gameName);
+
+        if (game == null) {
+            throw new NullPointerException("Game not found: " + gameName);
+        }
+
         game.play(user);
     }
 
     public void leave(User user, String gameName) {
         var game = games.get(gameName);
+
+        if (game == null) {
+            throw new NullPointerException("Game not found: " + gameName);
+        }
+
         game.leave(user);
     }
 }

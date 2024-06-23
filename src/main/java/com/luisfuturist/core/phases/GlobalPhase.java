@@ -11,6 +11,7 @@ public class GlobalPhase extends Phase {
         super("Global");
         setTimed(false);
         setAllowJoin(true);
+        setAllowSpectate(false);
         addFeatures(
                 new CustomLoginMessagesFeature(),
                 new CustomPlayerChatMessagesFeature(),

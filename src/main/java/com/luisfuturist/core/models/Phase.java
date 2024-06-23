@@ -9,9 +9,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class Phase implements Listener, Joinable {
+public abstract class Phase implements Listener, Joinable, Timed {
 
     @Getter
+    @Setter
     private String name;
     @Getter
     @Setter(value = AccessLevel.PROTECTED)

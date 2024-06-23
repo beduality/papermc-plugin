@@ -39,12 +39,11 @@ public abstract class Feature implements Listener, Handler, Joinable {
     }
 
     public User getUser(Player player) {
-        return getPhase()
-                .getGame()
+        return phase.getGame()
                 .getPlayers()
                 .stream()
                 .filter(u -> u.getPlayer().getUniqueId().equals(player.getUniqueId()))
-                .findAny()
+                .findFirst()
                 .orElse(null);
     }
 }

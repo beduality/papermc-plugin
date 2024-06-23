@@ -50,6 +50,16 @@ public class GlobalGame extends Game {
     }
 
     @Override
+    public void onDisable() {
+        super.onDisable();
+
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            var user = CorePlugin.userManager.login(player);
+            leave(user);
+        });
+    }
+
+    @Override
     public void play(User user) {
         joinGlobal(user);
         super.play(user);

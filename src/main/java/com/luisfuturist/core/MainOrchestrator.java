@@ -10,6 +10,8 @@ import com.luisfuturist.randomizer.features.UhcWorldFeature;
 import com.luisfuturist.randomizer.games.RandomizerGame;
 
 public class MainOrchestrator extends Orchestrator {
+
+    public static String RANDOMIZER = "Randomizer";
     
     public MainOrchestrator(JavaPlugin plugin, LocationManager locationManager) {
         var uhcWorldFeature = new UhcWorldFeature();

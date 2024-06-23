@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.luisfuturist.core.MainOrchestrator;
 import com.luisfuturist.core.models.Feature;
 import com.luisfuturist.core.models.User;
 
@@ -65,7 +66,17 @@ public class PlayItemFeature extends Feature {
             var user = getUser(player);
 
             var orchestrator = getPhase().getGame().getOrchestrator();
-            orchestrator.join(user, "Randomizer");
+
+            if (orchestrator.isPlaying(user, MainOrchestrator.RANDOMIZER)) {
+
+                var joinMessage = Component.text("You have already joined the UHC minigame.")
+                        .color(NamedTextColor.YELLOW);
+
+                player.sendMessage(joinMessage);
+                return;
+            }
+
+            orchestrator.join(user, MainOrchestrator.RANDOMIZER);
 
             var joinMessage = Component.text("You have joined the UHC minigame.")
                     .color(NamedTextColor.YELLOW);
@@ -73,18 +84,4 @@ public class PlayItemFeature extends Feature {
             player.sendMessage(joinMessage);
         }
     }
-
-    // private void teleport(Player player, World world) {
-    // // var world = uhcWorldFeature.getWorld();
-
-    // // if(world == null) {
-    // // player.sendMessage("World is not available yet.");
-    // // return;
-    // // }
-
-    // // teleport(player, world);
-
-    // var highestY = world.getHighestBlockYAt(0, 0);
-    // player.teleport(new Location(world, 0, highestY, 0));
-    // }
 }

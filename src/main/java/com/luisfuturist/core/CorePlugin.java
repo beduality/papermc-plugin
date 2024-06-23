@@ -2,6 +2,7 @@ package com.luisfuturist.core;
 
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +39,8 @@ public class CorePlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        orchestrator.onDisable();
+        if(orchestrator != null) {
+            orchestrator.onDisable();
+        }
     }
 }

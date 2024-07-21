@@ -15,8 +15,6 @@ public class NoHungerLossFeature extends Feature {
 
     @Override
     public void onEnable() {
-        super.onEnable();
-
         getPhase().getGame().getPlayers().forEach(user -> {
             resetFoodLevel(user.getPlayer());
         });

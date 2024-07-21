@@ -13,7 +13,6 @@ public class ClearInventoryFeature extends Feature {
 
     @Override
     public void onEnable() {
-        super.onEnable();
         getPhase().getGame().getPlayers().forEach(user -> {
             clearInventory(user.getPlayer());
         });

@@ -7,8 +7,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.luisfuturist.core.models.Feature;
-import com.luisfuturist.core.models.Timed;
 import com.luisfuturist.core.models.User;
+import com.luisfuturist.core.utils.StringUtils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +22,18 @@ public class BoardFeature extends Feature {
 
     private Scoreboard scoreboard;
     private Objective objective;
+
+    private static final int MAX_LENGTH = 16;
+    @Getter
+    private int length = 16;
+
+    public void setLength(int length) {
+        if(length > MAX_LENGTH) {
+            throw new IllegalArgumentException("Board length can't be greater than " + MAX_LENGTH);
+        }
+
+        this.length = length;
+    }
 
     private void initScoreboard() {
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -38,7 +50,7 @@ public class BoardFeature extends Feature {
         var i = lines.length;
 
         for (var line : lines) {
-            var gameStateScore = objective.getScore(line);
+            var gameStateScore = objective.getScore(StringUtils.padEnd(line, length));
             gameStateScore.setScore(i);
             i--;
         }
@@ -61,20 +73,19 @@ public class BoardFeature extends Feature {
     }
 
     @Override
-    public void onEnable() {
-        super.onEnable();
-
+    public void onCreate() {
         initScoreboard();
+    }
 
+    @Override
+    public void onEnable() {
         getPhase().getGame().getPlayers().forEach(user -> {
             showBoard(user);
         });
     }
-    
+
     @Override
     public void onDisable() {
-        super.onDisable();
-
         getPhase().getGame().getPlayers().forEach(user -> {
             hideBoard(user);
         });

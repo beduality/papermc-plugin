@@ -1,10 +1,11 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'net.minecrell.plugin-yml.bukkit' version '0.6.0'
     id "io.freefair.lombok" version "8.6"
 }
 
-group = "com.luisfuturist"
+group = "com.luisfuturist" // TODO improve it
 
 repositories {
     mavenCentral()
@@ -18,21 +19,30 @@ dependencies {
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 bukkit {
     name = "Randomizer"
     version = project.version
-    main = "com.luisfuturist.core.CorePlugin"
+    main = "com.luisfuturist.core.CorePlugin" // TODO improve it
     description = "A Randomizer UHC plugin"
     apiVersion = "1.16"
     author = "Luis Emidio"
-    website = "https://luisfuturist.com"
+    website = "https://github.com/beduality/randomizer"
 }
 
-jar {
-    archiveFileName = "Randomizer-${project.version}.jar"
+shadowJar {
+   archiveBaseName.set('Randomizer')
+   archiveClassifier.set('')
+   archiveVersion.set(project.version)
+}
+
+task cleanPlugins() {
+    delete fileTree(dir: "../server/plugins", include: "Randomizer*.jar")
+}
+
+task buildmv(dependsOn: ['shadowJar', 'cleanPlugins'], type: Copy) {
+    from "${buildDir}/libs"
+    into "../server/plugins"
 }

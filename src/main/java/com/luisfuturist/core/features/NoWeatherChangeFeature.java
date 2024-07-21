@@ -1,6 +1,5 @@
 package com.luisfuturist.core.features;
 
-import org.bukkit.GameRule;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;

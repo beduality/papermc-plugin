@@ -1,7 +1,10 @@
 package com.luisfuturist.core.models;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+
+import com.luisfuturist.core.utils.StringUtils;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,9 +12,24 @@ import lombok.Setter;
 
 public abstract class Feature implements Listener, Handler, Joinable {
 
+    @Setter
+    private String name;
+
     private @Getter @Setter(value = AccessLevel.PROTECTED) Phase phase;
 
     public Feature() {
+    }
+
+    public String getName() {
+        if(name == null) {
+            name = StringUtils.removeSuffix(getClass().getName(), "Feature");
+        }
+
+        return name;
+    }
+
+    public void onCreate() {
+        
     }
 
     @Override

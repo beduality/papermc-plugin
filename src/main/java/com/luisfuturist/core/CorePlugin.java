@@ -3,44 +3,49 @@ package com.luisfuturist.core;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.luisfuturist.core.games.GlobalGame;
 import com.luisfuturist.core.managers.ItemManager;
 import com.luisfuturist.core.managers.LocationManager;
 import com.luisfuturist.core.managers.UserManager;
 import com.luisfuturist.core.models.Orchestrator;
+import com.luisfuturist.hub.Hub;
+import com.luisfuturist.randomizer.Randomizer;
 
-public class CorePlugin extends JavaPlugin implements Listener {
-
-    public static JavaPlugin plugin;
-    public static Random random;
-
-    public static UserManager userManager;
-    public static ItemManager itemManager;
-    public static LocationManager locationManager;
-
-    public static Orchestrator orchestrator;
+public class CorePlugin extends JavaPlugin {
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         saveDefaultConfig();
 
-        plugin = this;
-        random = new Random();
+        Bed.plugin = this;
+        Bed.random = new Random();
 
-        userManager = new UserManager();
-        itemManager = new ItemManager();
-        locationManager = new LocationManager();
+        Bed.userManager = new UserManager();
+        Bed.itemManager = new ItemManager();
+        Bed.locationManager = new LocationManager();
 
-        orchestrator = new MainOrchestrator(plugin, locationManager);
-        orchestrator.onEnable();
+        Bed.orchestrator = new Orchestrator();
+        Bed.orchestrator.setGlobal(new GlobalGame());
+
+        Hub.onLoad(); // TODO refactor into a standalone plugin
+        Randomizer.onLoad(); // TODO refactor into a standalone plugin
+        
+        Bed.orchestrator.onCreate();
+    }
+    
+    @Override
+    public void onEnable() {
+        if(Bed.orchestrator != null) {
+            Bed.orchestrator.onEnable();
+        }
     }
 
     @Override
     public void onDisable() {
-        if(orchestrator != null) {
-            orchestrator.onDisable();
+        if (Bed.orchestrator != null) {
+            Bed.orchestrator.onDisable();
         }
     }
 }

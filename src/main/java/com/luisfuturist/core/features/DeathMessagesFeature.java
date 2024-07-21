@@ -13,6 +13,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class DeathMessagesFeature extends Feature {
+    
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         var player = (Player) event.getEntity();

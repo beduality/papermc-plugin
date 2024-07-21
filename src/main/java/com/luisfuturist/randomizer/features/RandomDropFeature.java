@@ -13,7 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.luisfuturist.core.CorePlugin;
+import com.luisfuturist.core.Bed;
 import com.luisfuturist.core.models.Feature;
 
 public class RandomDropFeature extends Feature {
@@ -22,7 +22,7 @@ public class RandomDropFeature extends Feature {
     private int itemsAddedAmount = 0;
 
     private ItemStack getRandomItemStack() {
-        var itemList = CorePlugin.itemManager.getItemList();
+        var itemList = Bed.itemManager.getItemList();
 
         if (itemList.isEmpty()) {
             return null;
@@ -35,7 +35,7 @@ public class RandomDropFeature extends Feature {
             return null;
         }
 
-        int randomInt = CorePlugin.random.nextInt(max);
+        int randomInt = Bed.random.nextInt(max);
 
         var is = itemList.get(randomInt);
 

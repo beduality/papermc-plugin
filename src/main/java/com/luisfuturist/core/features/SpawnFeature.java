@@ -6,14 +6,13 @@ import com.luisfuturist.core.models.Feature;
 import com.luisfuturist.core.models.User;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
+@Getter @Setter @NonNull @NoArgsConstructor
 public class SpawnFeature extends Feature {
 
-    @Getter
-    @Setter
-    @NonNull
     private Location location;
 
     @Override

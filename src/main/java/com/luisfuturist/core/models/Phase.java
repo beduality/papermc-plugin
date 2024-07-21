@@ -14,8 +14,6 @@ public abstract class Phase implements Listener, Joinable, Timed {
     @Getter
     @Setter
     private String name;
-    @Getter
-    @Setter(value = AccessLevel.PROTECTED)
     private List<Feature> features = new ArrayList<>();
     @Getter
     @Setter
@@ -40,8 +38,10 @@ public abstract class Phase implements Listener, Joinable, Timed {
     @Setter
     private boolean allowSpectate = true;
 
-    public Phase(String label) {
-        this.name = label;
+    public void onCreate() {
+        for(var feature : features) {
+            feature.onCreate();
+        }
     }
 
     public void onStart() {
@@ -58,13 +58,17 @@ public abstract class Phase implements Listener, Joinable, Timed {
     public void onLeave(User user) {
     }
 
-    public void addFeature(Feature feature) {
-        feature.setPhase(this);
-        this.features.add(feature);
+    public final List<Feature> getFeatures() {
+        return new ArrayList<>(features); // Return a copy to prevent modification outside of this class
     }
 
-    public void addFeatures(Feature... features) {
-        for (Feature feature : features) {
+    public final void addFeature(Feature feature) {
+        feature.setPhase(this);
+        features.add(feature);
+    }
+
+    public final void addFeatures(Feature... features) {
+        for (var feature : features) {
             addFeature(feature);
         }
     }

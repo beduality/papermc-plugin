@@ -6,7 +6,7 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import com.luisfuturist.core.CorePlugin;
+import com.luisfuturist.core.Bed;
 import com.luisfuturist.core.utils.ItemStackUtils;
 
 public class ItemManager {
@@ -20,7 +20,7 @@ public class ItemManager {
     private void reloadItemList() {
         itemList.clear();
 
-        FileConfiguration config = CorePlugin.plugin.getConfig();
+        FileConfiguration config = Bed.plugin.getConfig();
         List<String> itemNames = config.getStringList("items");
 
         for (String itemName : itemNames) {

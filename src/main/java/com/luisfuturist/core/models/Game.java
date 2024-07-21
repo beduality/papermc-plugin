@@ -7,8 +7,10 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.luisfuturist.core.Bed;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,36 +26,49 @@ public class Game implements Listener, Handler {
     @Getter
     private Phase currentPhase;
     @Getter
-    @Setter
     private Phase globalPhase;
     @Getter
-    @Setter
     private Phase firstPhase;
-
-    private JavaPlugin plugin;
 
     @Getter
     private boolean isRunning;
-    @Getter
+    @Getter @Setter
     private String name;
 
-    public Game(String name, JavaPlugin plugin) {
-        this.name = name;
-        this.plugin = plugin;
+    @Getter
+    @Setter
+    private int minPlayers = 1, maxPlayers = 8;
+
+    @Getter @Setter
+    private ItemStack icon;
+
+    public void setGlobalPhase(Phase phase) {
+        phase.setGame(this);
+        globalPhase = phase;
+    }
+
+    public void setFirstPhase(Phase phase) {
+        phase.setGame(this);
+        firstPhase = phase;
+    }
+
+    public void onCreate() {
+        if(globalPhase != null) {
+            globalPhase.onCreate();
+        }
+
+        if(firstPhase != null) {
+            firstPhase.onCreate();
+        }
     }
 
     public Set<User> getPlayers() {
         return new HashSet<>(playerSet); // Return a copy to prevent modification outside
     }
 
-    public Phase createPhase(Phase phase) {
-        phase.setGame(this);
-        return phase;
-    }
-
     private void enableFeatures(List<Feature> features) {
         for (var feature : features) {
-            Bukkit.getPluginManager().registerEvents(feature, plugin);
+            Bukkit.getPluginManager().registerEvents(feature, Bed.plugin);
             feature.onEnable();
         }
     }
@@ -69,7 +84,7 @@ public class Game implements Listener, Handler {
     public void onEnable() {
         currentPhase = firstPhase;
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, Bed.plugin);
         
         if (globalPhase != null) {
             enablePhase(globalPhase);
@@ -90,7 +105,7 @@ public class Game implements Listener, Handler {
     public void onStart() {
         isRunning = true;
 
-        plugin.getLogger().info("Core | " + getName() + " | Game started.");
+        Bed.plugin.getLogger().info("Core | " + getName() + " | Game started.");
     }
 
     public void onFinish() {
@@ -98,11 +113,11 @@ public class Game implements Listener, Handler {
 
         disableCurrentPhase();
 
-        plugin.getLogger().info("Core | " + getName() + " | Game has ended.");
+        Bed.plugin.getLogger().info("Core | " + getName() + " | Game has ended.");
     }
 
     private void enablePhase(Phase phase) {
-        Bukkit.getPluginManager().registerEvents(phase, plugin);
+        Bukkit.getPluginManager().registerEvents(phase, Bed.plugin);
         enableFeatures(phase.getFeatures());
         phase.onStart();
     }
@@ -135,7 +150,7 @@ public class Game implements Listener, Handler {
 
     private void finishPhase(Phase phase) {
         phase.setRunning(false);
-        plugin.getLogger()
+        Bed.plugin.getLogger()
                 .info("Core | " + getName() + " | Phase " + phase.getName() + " has ended.");
 
         if (phase.getNextPhase() != null) {
@@ -149,7 +164,7 @@ public class Game implements Listener, Handler {
         nextPhase(phase);
         phase.setRunning(true);
 
-        plugin.getLogger().info("Core | " + getName() + " | Phase " + phase.getName() + " has begun.");
+        Bed.plugin.getLogger().info("Core | " + getName() + " | Phase " + phase.getName() + " has begun.");
 
         if (!phase.isTimed()) {
             return;
@@ -160,7 +175,7 @@ public class Game implements Listener, Handler {
             public void run() {
                 finishPhase(phase);
             }
-        }.runTaskLater(plugin, phase.getDuration());
+        }.runTaskLater(Bed.plugin, phase.getDuration());
     }
 
     public void start(Phase firstPhase) {
@@ -211,7 +226,7 @@ public class Game implements Listener, Handler {
         if (currentPhase.isAllowJoin()) {
             joinPhase(user, currentPhase);
         } else {
-            plugin.getLogger()
+            Bed.plugin.getLogger()
                     .warning(getName() + " | It's not allowed to join in phase " + currentPhase.getName());
         }
     }

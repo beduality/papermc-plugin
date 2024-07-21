@@ -13,20 +13,23 @@ import com.luisfuturist.randomizer.features.RandomDropFeature;
 
 public class GracePhase extends Phase {
 
-    public GracePhase() {
-        super("Grace");
-        addFeatures(
-                new NoPveFeature(),
-                new HealthFeature(),
-                new RemovePotionEffectsFeature(),
-                new RandomDropFeature());
-        setDuration(Constants.TPS * 60 * 5);
-        setAllowJoin(true);
-    }
-
-    public void resetPlayer(Player player) {
+    private void resetPlayer(Player player) {
         player.setGameMode(GameMode.SURVIVAL);
         player.getInventory().clear();
+    }
+    
+    @Override
+    public void onCreate() {
+        setName("Grace");
+        addFeatures(
+            new NoPveFeature(),
+            new HealthFeature(),
+            new RemovePotionEffectsFeature(),
+            new RandomDropFeature());
+        setDuration(Constants.TPS * 60 * 5);
+        setAllowJoin(true);
+
+        super.onCreate();
     }
 
     @Override

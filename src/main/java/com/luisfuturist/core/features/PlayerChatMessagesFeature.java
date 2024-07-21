@@ -8,7 +8,7 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-public class CustomPlayerChatMessagesFeature extends Feature {
+public class PlayerChatMessagesFeature extends Feature {
 
     @EventHandler
     public void onAsyncChat(AsyncChatEvent event) {

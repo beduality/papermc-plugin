@@ -3,19 +3,41 @@ package com.luisfuturist.core.models;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+
 import lombok.Getter;
-import lombok.Setter;
 
 public class Orchestrator implements Handler {
 
     @Getter
-    @Setter
     private Game global;
     @Getter
-    @Setter
     private Game hub;
 
     private HashMap<String, Game> games = new HashMap<>();
+
+    public void setGlobal(Game game) {
+        game.setOrchestrator(this);
+        global = game;
+    }
+
+    public void setHub(Game game) {
+        game.setOrchestrator(this);
+        hub = game;
+    }
+
+    public void onCreate() {
+        if(global != null) {
+            global.onCreate();
+        }
+
+        if(hub != null) {
+            hub.onCreate();
+        }
+
+        for (var game : games.values())
+            game.onCreate();
+    }
 
     @Override
     public void onEnable() {
@@ -63,11 +85,6 @@ public class Orchestrator implements Handler {
             if (o != null)
                 o.onDisable();
         }
-    }
-
-    public Game createGame(Game game) {
-        game.setOrchestrator(this);
-        return game;
     }
 
     public Game addGame(Game game) {

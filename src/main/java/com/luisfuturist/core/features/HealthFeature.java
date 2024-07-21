@@ -14,8 +14,6 @@ public class HealthFeature extends Feature {
 
     @Override
     public void onEnable() {
-        super.onEnable();
-
         getPhase().getGame().getPlayers().forEach(user -> {
             heal(user.getPlayer());
         });

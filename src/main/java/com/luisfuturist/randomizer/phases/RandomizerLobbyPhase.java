@@ -1,13 +1,11 @@
 package com.luisfuturist.randomizer.phases;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
+import com.luisfuturist.core.Bed;
 import com.luisfuturist.core.features.BoardFeature;
+import com.luisfuturist.core.features.LobbyTimerFeature;
 import com.luisfuturist.core.features.SpawnFeature;
-import com.luisfuturist.core.managers.LocationManager;
 import com.luisfuturist.core.models.User;
 import com.luisfuturist.core.phases.LobbyPhase;
-import com.luisfuturist.randomizer.features.LobbyTimerFeature;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -24,7 +22,7 @@ public class RandomizerLobbyPhase extends LobbyPhase {
     };
     private BoardFeature boardFeature = new BoardFeature();
 
-    public void setupBoard() {
+    private void setupBoard() {
         var displayName = Component.text().color(NamedTextColor.BLUE)
                 .append(Component.text("Randomizer")).asComponent();
 
@@ -39,32 +37,31 @@ public class RandomizerLobbyPhase extends LobbyPhase {
         });
     }
 
-    public RandomizerLobbyPhase(
-            JavaPlugin plugin,
-            LocationManager locationManager) {
-        super();
+    @Override
+    public void onCreate() {
         setName("RandomizerLobby");
         setTimed(false);
 
         addFeatures(boardFeature, countdownFeature);
 
-        var lobbyLocation = locationManager.getLocation("lobby");
+        var lobbyLocation = Bed.locationManager.getLocation("lobby");
 
         if (lobbyLocation != null) {
             var spawnFeature = new SpawnFeature();
             spawnFeature.setLocation(lobbyLocation);
             addFeature(spawnFeature);
         } else {
-            plugin.getLogger().warning("Randomizer | Spawn feature in " + getName()
+            Bed.plugin.getLogger().warning("Randomizer | Spawn feature in " + getName()
                     + " phase is not available due to the lack of location config.");
         }
+        
+        setupBoard();
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        setupBoard();
         countdownFeature.start();
 
         getGame().getPlayers().forEach(user -> {

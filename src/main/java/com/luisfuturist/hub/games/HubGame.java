@@ -1,32 +1,36 @@
 package com.luisfuturist.hub.games;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Bukkit;
 
-import com.luisfuturist.core.features.SpawnFeature;
-import com.luisfuturist.core.managers.LocationManager;
+import com.luisfuturist.core.features.PlayerListFeature;
 import com.luisfuturist.core.models.Game;
 import com.luisfuturist.core.phases.LobbyPhase;
-import com.luisfuturist.hub.features.PlayItemFeature;
+import com.luisfuturist.hub.features.HubBoardFeature;
+import com.luisfuturist.hub.features.GameMenuFeature;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class HubGame extends Game {
 
-    public HubGame(JavaPlugin plugin, LocationManager locationManager) {
-        super("Hub", plugin);
+    @Override
+    public void onCreate() {
+        setName("Hub");
+        setMinPlayers(0);
+        setMaxPlayers(Bukkit.getMaxPlayers());
 
-        var lobbyPhase = createPhase(new LobbyPhase());
+        var lobbyPhase = new LobbyPhase();
         lobbyPhase.setTimed(false);
-        lobbyPhase.addFeature(new PlayItemFeature());
+        lobbyPhase.addFeature(new GameMenuFeature());
+        lobbyPhase.addFeature(new HubBoardFeature());
 
-        var lobbyLocation = locationManager.getLocation("lobby");
-        
-        if(lobbyLocation != null) {
-            var spawnFeature = new SpawnFeature();
-            spawnFeature.setLocation(lobbyLocation);
-            lobbyPhase.addFeature(spawnFeature);
-        } else {
-            plugin.getLogger().warning("Hub | Spawn feature in " + lobbyPhase.getName() + " phase is not available due to the lack of location config.");
-        }
+        var header = Component.text("Block-Entity Duality\n").color(NamedTextColor.AQUA);
+        var footer = Component.text("\nProbabilistically fun.").color(NamedTextColor.WHITE);
+
+        lobbyPhase.addFeature(new PlayerListFeature(header, footer));
 
         setFirstPhase(lobbyPhase);
+
+        super.onCreate();
     }
 }

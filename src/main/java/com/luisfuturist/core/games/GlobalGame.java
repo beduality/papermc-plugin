@@ -5,36 +5,27 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import com.luisfuturist.core.CorePlugin;
+import com.luisfuturist.core.Bed;
 import com.luisfuturist.core.models.Game;
 import com.luisfuturist.core.models.User;
 import com.luisfuturist.core.phases.GlobalPhase;
 
-import lombok.Getter;
-
 public class GlobalGame extends Game {
 
-    private JavaPlugin plugin;
+    @Override
+    public void onCreate() {
+        setName("Global");
+        setGlobalPhase(new GlobalPhase());
 
-    @Getter
-    private Game hub;
-
-    public GlobalGame(JavaPlugin plugin, Game hub) {
-        super("Global", plugin);
-        this.plugin = plugin;
-        this.hub = hub;
-
-        var globalPhase = createPhase(new GlobalPhase());
-        setGlobalPhase(globalPhase);
+        super.onCreate();
     }
 
     private void disableAdvancements() {
-        if (plugin == null)
+        if (Bed.plugin == null)
             return;
 
-        plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), "gamerule announceAdvancements false");
+        Bed.plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), "gamerule announceAdvancements false");
     }
 
     @Override
@@ -44,7 +35,7 @@ public class GlobalGame extends Game {
         disableAdvancements();
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            var user = CorePlugin.userManager.login(player);
+            var user = Bed.userManager.login(player);
             play(user);
         });
     }
@@ -54,7 +45,7 @@ public class GlobalGame extends Game {
         super.onDisable();
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            var user = CorePlugin.userManager.login(player);
+            var user = Bed.userManager.login(player);
             leave(user);
         });
     }
@@ -63,6 +54,8 @@ public class GlobalGame extends Game {
     public void play(User user) {
         joinGlobal(user);
         super.play(user);
+
+        var hub = getOrchestrator().getHub();
 
         if (hub != null) {
             hub.play(user);
@@ -74,7 +67,7 @@ public class GlobalGame extends Game {
         leaveGlobal(user);
         super.leave(user);
 
-        CorePlugin.plugin.getLogger().info(getName() + " | leave with players size: " + getPlayers().size());
+        var hub = getOrchestrator().getHub();
 
         if (hub != null) {
             hub.play(user);
@@ -85,19 +78,15 @@ public class GlobalGame extends Game {
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
 
-        var user = CorePlugin.userManager.getOrLogin(player);
+        var user = Bed.userManager.getOrLogin(player);
         play(user);
-        
-        event.joinMessage(null);
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        var user = CorePlugin.userManager.getUser(event.getPlayer());
+        var user = Bed.userManager.getUser(event.getPlayer());
         
         leave(user);
-        CorePlugin.userManager.logout(user);
-
-        event.quitMessage(null);
+        Bed.userManager.logout(user);
     }
 }

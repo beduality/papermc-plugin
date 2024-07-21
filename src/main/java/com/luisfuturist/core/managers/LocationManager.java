@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.bukkit.Location;
 
-import com.luisfuturist.core.CorePlugin;
+import com.luisfuturist.core.Bed;
 import com.luisfuturist.core.utils.LocationUtils;
 
 public class LocationManager {
@@ -19,10 +19,10 @@ public class LocationManager {
     private void reloadLocationMap() {
         locationMap.clear();
 
-        var config = CorePlugin.plugin.getConfig();
+        var config = Bed.plugin.getConfig();
 
         if (!config.contains("locations", true)) {
-            CorePlugin.plugin.getLogger().warning("No 'locations' section found in the config.");
+            Bed.plugin.getLogger().warning("No 'locations' section found in the config.");
             return;
         }
 
@@ -35,7 +35,7 @@ public class LocationManager {
                 location = LocationUtils.fromString(locationLine);
                 locationMap.put(key, location);
             } catch (Exception e) {
-                CorePlugin.plugin.getLogger()
+                Bed.plugin.getLogger()
                         .warning(e.getMessage());
             }
         }

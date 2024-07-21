@@ -1,20 +1,25 @@
 package com.luisfuturist.core.phases;
 
-import com.luisfuturist.core.features.CustomLoginMessagesFeature;
-import com.luisfuturist.core.features.CustomPlayerChatMessagesFeature;
+import com.luisfuturist.core.features.LoginMessagesFeature;
+import com.luisfuturist.core.features.PlayerChatMessagesFeature;
 import com.luisfuturist.core.features.DeathMessagesFeature;
 import com.luisfuturist.core.models.Phase;
 
 public class GlobalPhase extends Phase {
 
-    public GlobalPhase() {
-        super("Global");
+    @Override
+    public void onCreate() {
+        setName("Global");
         setTimed(false);
         setAllowJoin(true);
         setAllowSpectate(false);
+
         addFeatures(
-                new CustomLoginMessagesFeature(),
-                new CustomPlayerChatMessagesFeature(),
-                new DeathMessagesFeature());
+            new LoginMessagesFeature(),
+            new PlayerChatMessagesFeature(),
+            new DeathMessagesFeature()
+        );
+
+        super.onCreate();
     }
 }

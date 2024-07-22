@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +17,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class Game implements Listener, Handler {
 
@@ -26,40 +29,40 @@ public class Game implements Listener, Handler {
     @Getter
     private Phase currentPhase;
     @Getter
+    @Setter
     private Phase globalPhase;
     @Getter
+    @Setter
     private Phase firstPhase;
 
     @Getter
     private boolean isRunning;
-    @Getter @Setter
+    @Getter
+    @Setter
     private String name;
 
     @Getter
     @Setter
     private int minPlayers = 1, maxPlayers = 8;
 
-    @Getter @Setter
+    @Setter
     private ItemStack icon;
 
-    public void setGlobalPhase(Phase phase) {
-        phase.setGame(this);
-        globalPhase = phase;
-    }
+    public ItemStack getIcon() {
+        if (icon == null) {
+            icon = new ItemStack(Material.PAPER);
 
-    public void setFirstPhase(Phase phase) {
-        phase.setGame(this);
-        firstPhase = phase;
+            var meta = icon.getItemMeta();
+            meta.displayName(Component.text(getName()).color(NamedTextColor.YELLOW));
+
+            icon.setItemMeta(meta);
+        }
+
+        return icon;
     }
 
     public void onCreate() {
-        if(globalPhase != null) {
-            globalPhase.onCreate();
-        }
 
-        if(firstPhase != null) {
-            firstPhase.onCreate();
-        }
     }
 
     public Set<User> getPlayers() {
@@ -85,7 +88,7 @@ public class Game implements Listener, Handler {
         currentPhase = firstPhase;
 
         Bukkit.getPluginManager().registerEvents(this, Bed.plugin);
-        
+
         if (globalPhase != null) {
             enablePhase(globalPhase);
         }
@@ -241,5 +244,11 @@ public class Game implements Listener, Handler {
 
     public boolean isPlaying(User user) {
         return playerSet.contains(user);
+    }
+
+    public <T extends Phase> T createPhase(T phase) {
+        phase.setGame(this);
+        phase.onCreate();
+        return phase;
     }
 }

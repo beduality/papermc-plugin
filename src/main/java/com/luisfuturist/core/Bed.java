@@ -23,4 +23,8 @@ public class Bed {
     @Getter
     protected static Orchestrator orchestrator;
 
+    public static <T extends Orchestrator> T createOrchestrator(T orchestrator) {
+        orchestrator.onCreate();
+        return orchestrator;
+    }
 }

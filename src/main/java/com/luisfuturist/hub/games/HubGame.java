@@ -19,18 +19,16 @@ public class HubGame extends Game {
         setMinPlayers(0);
         setMaxPlayers(Bukkit.getMaxPlayers());
 
-        var lobbyPhase = new LobbyPhase();
+        var lobbyPhase = createPhase(new LobbyPhase());
         lobbyPhase.setTimed(false);
-        lobbyPhase.addFeature(new GameMenuFeature());
-        lobbyPhase.addFeature(new HubBoardFeature());
+        lobbyPhase.createAndAddFeature(new GameMenuFeature());
+        lobbyPhase.createAndAddFeature(new HubBoardFeature());
 
         var header = Component.text("Block-Entity Duality\n").color(NamedTextColor.AQUA);
         var footer = Component.text("\nProbabilistically fun.").color(NamedTextColor.WHITE);
 
-        lobbyPhase.addFeature(new PlayerListFeature(header, footer));
+        lobbyPhase.createAndAddFeature(new PlayerListFeature(header, footer));
 
         setFirstPhase(lobbyPhase);
-
-        super.onCreate();
     }
 }

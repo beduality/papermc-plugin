@@ -30,8 +30,6 @@ public class HubBoardFeature extends BoardFeature {
     @Override
     public void onEnable() {
         super.onEnable();
-        Bukkit.getLogger().info("Enabling scoreboard");
         setupBoard();
-
     }
 }

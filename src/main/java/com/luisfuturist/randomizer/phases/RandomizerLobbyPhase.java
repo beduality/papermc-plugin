@@ -39,17 +39,19 @@ public class RandomizerLobbyPhase extends LobbyPhase {
 
     @Override
     public void onCreate() {
+        super.onCreate();
+        
         setName("RandomizerLobby");
         setTimed(false);
 
-        addFeatures(boardFeature, countdownFeature);
+        createAndAddFeatures(boardFeature, countdownFeature);
 
         var lobbyLocation = Bed.locationManager.getLocation("lobby");
 
         if (lobbyLocation != null) {
             var spawnFeature = new SpawnFeature();
             spawnFeature.setLocation(lobbyLocation);
-            addFeature(spawnFeature);
+            createAndAddFeature(spawnFeature);
         } else {
             Bed.plugin.getLogger().warning("Randomizer | Spawn feature in " + getName()
                     + " phase is not available due to the lack of location config.");

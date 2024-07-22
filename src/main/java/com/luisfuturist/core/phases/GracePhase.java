@@ -21,15 +21,13 @@ public class GracePhase extends Phase {
     @Override
     public void onCreate() {
         setName("Grace");
-        addFeatures(
+        createAndAddFeatures(
             new NoPveFeature(),
             new HealthFeature(),
             new RemovePotionEffectsFeature(),
             new RandomDropFeature());
         setDuration(Constants.TPS * 60 * 5);
         setAllowJoin(true);
-
-        super.onCreate();
     }
 
     @Override

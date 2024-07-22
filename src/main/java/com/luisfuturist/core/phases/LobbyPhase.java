@@ -37,7 +37,7 @@ public class LobbyPhase extends Phase {
         location = locationManager.getLocation("lobby");
         var world = location.getWorld();
         
-        addFeatures(
+        createAndAddFeatures(
                 new NoDamageFeature(),
                 new NoBlockBreakFeature(),
                 new NoBlockPlaceFeature(),
@@ -55,14 +55,12 @@ public class LobbyPhase extends Phase {
         if(lobbyLocation != null) {
             var spawnFeature = new SpawnFeature();
             spawnFeature.setLocation(lobbyLocation);
-            addFeature(spawnFeature);
+            createAndAddFeature(spawnFeature);
 
-            addFeature(new VoidSpawnTeleportFeature(spawnFeature));
+            createAndAddFeature(new VoidSpawnTeleportFeature(spawnFeature));
         } else {
             Bed.plugin.getLogger().warning("Hub | Spawn feature in " + getName() + " phase is not available due to the lack of location config.");
         }
-
-        super.onCreate();
     }
 
     @Override

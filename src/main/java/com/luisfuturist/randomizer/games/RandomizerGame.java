@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import com.luisfuturist.core.models.Game;
 import com.luisfuturist.core.models.Phase;
 import com.luisfuturist.core.phases.GracePhase;
-import com.luisfuturist.randomizer.features.UhcWorldFeature;
 import com.luisfuturist.randomizer.phases.RandomizerLobbyPhase;
 
 import lombok.Getter;
@@ -22,7 +21,7 @@ public class RandomizerGame extends Game {
         var meta = icon.getItemMeta();
         meta.displayName(displayName);
         icon.setItemMeta(meta);
-        
+
         return icon;
     }
 
@@ -31,21 +30,19 @@ public class RandomizerGame extends Game {
         setName("Randomizer");
         setIcon(generateIcon());
 
-        var globalPhase = new Phase() {
+        var globalPhase = createPhase(new Phase() {
 
-        };
+        });
         globalPhase.setName("RandomizerGlobal");
-        globalPhase.addFeature(new UhcWorldFeature());
+        //globalPhase.createAndAddFeature(new UhcWorldFeature());
         setGlobalPhase(globalPhase);
 
-        var gracePhase = new GracePhase();
+        var gracePhase = createPhase(new GracePhase());
         gracePhase.setDuration(20 * 5);
 
-        var lobbyPhase = new RandomizerLobbyPhase();
+        var lobbyPhase = createPhase(new RandomizerLobbyPhase());
         lobbyPhase.setNextPhase(gracePhase);
 
         setFirstPhase(lobbyPhase);
-
-        super.onCreate();
     }
 }

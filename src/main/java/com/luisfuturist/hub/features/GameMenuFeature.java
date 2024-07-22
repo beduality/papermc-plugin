@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.luisfuturist.core.models.Feature;
+import com.luisfuturist.core.models.Game;
 import com.luisfuturist.core.models.User;
 
 import net.kyori.adventure.text.Component;
@@ -18,7 +19,18 @@ import net.kyori.adventure.text.format.NamedTextColor;
 public class GameMenuFeature extends Feature {
 
     private ItemStack menuItem;
-    private final Component MENU_ITEM_NAME = Component.text("Game Menu").color(NamedTextColor.YELLOW);
+
+    private ItemStack generateMenuItem() {
+        var item = new ItemStack(Material.CHEST, 1);
+
+        var meta = item.getItemMeta();
+        var displayName = Component.text("Game Menu").color(NamedTextColor.YELLOW);
+        meta.displayName(displayName);
+
+        item.setItemMeta(meta);
+
+        return item;
+    }
 
     private void giveMenuItem(Player player) {
         player.getInventory().addItem(menuItem);
@@ -48,16 +60,22 @@ public class GameMenuFeature extends Feature {
         player.openInventory(gameMenu);
     }
 
+    private Game getGameByIcon(ItemStack icon) {
+        var orchestrator = getPhase().getGame().getOrchestrator();
+        var games = orchestrator.getGames();
+
+        for (var game : games.values()) {
+            if (icon.isSimilar(game.getIcon())) {
+                return game;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public void onCreate() {
-        menuItem = new ItemStack(Material.CHEST, 1);
-
-        var meta = menuItem.getItemMeta();
-        meta.displayName(MENU_ITEM_NAME);
-
-        menuItem.setItemMeta(meta);
-
-        super.onCreate();
+        menuItem = generateMenuItem();
     }
 
     @Override
@@ -90,7 +108,7 @@ public class GameMenuFeature extends Feature {
             return;
         }
 
-        if (item.getItemMeta().displayName().equals(MENU_ITEM_NAME)) {
+        if (item.isSimilar(menuItem)) {
             event.setCancelled(true);
             openGameMenu(player);
         }
@@ -112,17 +130,25 @@ public class GameMenuFeature extends Feature {
             return;
         }
 
-        var orchestrator = getPhase().getGame().getOrchestrator();
         var user = getUser(player);
+        var game = getGameByIcon(clickedItem);
 
-        String gameName = Component.text(clickedItem.getItemMeta().displayName().toString()).toString();
+        if(game == null) {
+            var errorMessage = Component.text("Game not found for the icon: " + clickedItem.displayName())
+            .color(NamedTextColor.RED);
+            player.sendMessage(errorMessage);
+            return;
+        }
+        
+        var orchestrator = getPhase().getGame().getOrchestrator();
+        var gameName = game.getName();
 
         if (orchestrator.isPlaying(user, gameName)) {
             var joinMessage = Component.text("You have already joined the " + gameName + " minigame.")
                     .color(NamedTextColor.YELLOW);
             player.sendMessage(joinMessage);
         } else {
-            //orchestrator.join(user, gameName); // TODO
+            orchestrator.join(user, gameName);
 
             var joinMessage = Component.text("You have joined the " + gameName + " minigame.")
                     .color(NamedTextColor.YELLOW);

@@ -16,9 +16,7 @@ public class GlobalGame extends Game {
     @Override
     public void onCreate() {
         setName("Global");
-        setGlobalPhase(new GlobalPhase());
-
-        super.onCreate();
+        setGlobalPhase(createPhase(new GlobalPhase()));
     }
 
     private void disableAdvancements() {

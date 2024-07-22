@@ -39,9 +39,7 @@ public abstract class Phase implements Listener, Joinable, Timed {
     private boolean allowSpectate = true;
 
     public void onCreate() {
-        for(var feature : features) {
-            feature.onCreate();
-        }
+        
     }
 
     public void onStart() {
@@ -60,6 +58,22 @@ public abstract class Phase implements Listener, Joinable, Timed {
 
     public final List<Feature> getFeatures() {
         return new ArrayList<>(features); // Return a copy to prevent modification outside of this class
+    }
+
+    public <T extends Feature> T createFeature(T feature) {
+        feature.setPhase(this);
+        feature.onCreate();
+        return feature;
+    }
+
+    public final void createAndAddFeature(Feature feature) {
+        features.add(createFeature(feature));
+    }
+
+    public final void createAndAddFeatures(Feature... features) {
+        for (var feature : features) {
+            createAndAddFeature(feature);
+        }
     }
 
     public final void addFeature(Feature feature) {

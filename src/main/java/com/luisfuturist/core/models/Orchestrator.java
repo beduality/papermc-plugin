@@ -3,8 +3,6 @@ package com.luisfuturist.core.models;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-
 import lombok.Getter;
 
 public class Orchestrator implements Handler {
@@ -27,16 +25,7 @@ public class Orchestrator implements Handler {
     }
 
     public void onCreate() {
-        if(global != null) {
-            global.onCreate();
-        }
-
-        if(hub != null) {
-            hub.onCreate();
-        }
-
-        for (var game : games.values())
-            game.onCreate();
+        
     }
 
     @Override
@@ -133,5 +122,11 @@ public class Orchestrator implements Handler {
         }
 
         game.leave(user);
+    }
+
+    public <T extends Game> T createGame(T game) {
+        game.setOrchestrator(this);
+        game.onCreate();
+        return game;
     }
 }

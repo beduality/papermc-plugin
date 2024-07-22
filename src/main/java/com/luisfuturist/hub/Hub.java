@@ -6,6 +6,9 @@ import com.luisfuturist.hub.games.HubGame;
 public class Hub {
 
     public static void onLoad() {
-        Bed.getOrchestrator().setHub(new HubGame());
+        var orchestrator = Bed.getOrchestrator();
+        
+        var hubGame = orchestrator.createGame(new HubGame());
+        orchestrator.setHub(hubGame);
     }
 }

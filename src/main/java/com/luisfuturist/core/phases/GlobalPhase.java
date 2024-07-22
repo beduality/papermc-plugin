@@ -14,12 +14,10 @@ public class GlobalPhase extends Phase {
         setAllowJoin(true);
         setAllowSpectate(false);
 
-        addFeatures(
+        createAndAddFeatures(
             new LoginMessagesFeature(),
             new PlayerChatMessagesFeature(),
             new DeathMessagesFeature()
         );
-
-        super.onCreate();
     }
 }

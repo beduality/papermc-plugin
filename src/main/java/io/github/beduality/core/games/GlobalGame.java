@@ -68,7 +68,15 @@ public class GlobalGame extends Game {
         var hub = getOrchestrator().getHub();
 
         if (hub != null) {
-            hub.play(user);
+            hub.leave(user);
+        }
+
+        var game = getOrchestrator().getGames().values().stream()
+                .filter(g -> g.isPlaying(user))
+                .findFirst().orElse(null);
+
+        if(game != null) {
+            game.leave(user);
         }
     }
 

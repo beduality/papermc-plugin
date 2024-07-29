@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import org.bukkit.scheduler.BukkitTask;
 
 @NoArgsConstructor
 public class LobbyTimerFeature extends Feature implements Timed {
@@ -24,6 +25,10 @@ public class LobbyTimerFeature extends Feature implements Timed {
     @Getter
     @Setter
     private int remainingTime = duration;
+    @Getter
+    @Setter
+    private Component beginningName = Component.text("Game is about to start");
+    private BukkitTask task;
 
     public LobbyTimerFeature(int duration) {
         this.duration = duration;
@@ -31,8 +36,7 @@ public class LobbyTimerFeature extends Feature implements Timed {
 
     @Override
     public void onEnable() {
-        final Component name = Component.text("Game is about to start");
-        bar = BossBar.bossBar(name, 1.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS);
+        bar = BossBar.bossBar(beginningName, 1.0f, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS);
     }
 
     public void showBossBar(User user) {
@@ -49,7 +53,7 @@ public class LobbyTimerFeature extends Feature implements Timed {
     }
 
     public void start() {
-        new BukkitRunnable() {
+        task = new BukkitRunnable() {
             @Override
             public void run() {
                 if (remainingTime <= 0) {
@@ -66,6 +70,24 @@ public class LobbyTimerFeature extends Feature implements Timed {
             }
         }.runTaskTimer(Bed.plugin, 0L, 1L);
         onStart();
+    }
+
+    public void stop() {
+        if (task != null) {
+            task.cancel();
+            task = null;
+            onFinish();
+        }
+    }
+
+    public void reset() {
+        if (task != null) {
+            task.cancel();
+            task = null;
+        }
+        setRemainingTime(getDuration());
+        bar.name(beginningName);
+        bar.progress(1);
     }
 
     @Override

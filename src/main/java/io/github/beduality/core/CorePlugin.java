@@ -2,6 +2,7 @@ package io.github.beduality.core;
 
 import java.util.Random;
 
+import io.github.beduality.spleef.Spleef;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import io.github.beduality.core.managers.ItemManager;
@@ -27,6 +28,7 @@ public class CorePlugin extends JavaPlugin {
 
         Hub.onLoad(); // TODO refactor into a standalone plugin
         Randomizer.onLoad(); // TODO refactor into a standalone plugin
+        Spleef.onLoad();
     }
     
     @Override

@@ -7,16 +7,17 @@ import javax.annotation.Nonnull;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 
 import com.luisfuturist.core.models.Feature;
 
 import lombok.Getter;
 import lombok.Setter;
 
-public class NoBlockBreakFeature extends Feature {
+public class NoItemDropFeature extends Feature {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private Set<Material> whitelist = new HashSet<Material>();
 
     public void whitelistMaterial(@Nonnull Material material) {
@@ -24,18 +25,20 @@ public class NoBlockBreakFeature extends Feature {
     }
 
     public void whitelistMaterials(@Nonnull Material... materials) {
-        for(var material : materials) {
+        for (var material : materials) {
             whitelist.add(material);
         }
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (!isPlaying(event.getPlayer())) {
             return;
         }
 
-        if(!whitelist.contains(event.getBlock().getType())) {
+        var itemStack = event.getItemDrop().getItemStack();
+
+        if(!whitelist.contains(itemStack.getType())) {
             event.setCancelled(true);
         }
     }

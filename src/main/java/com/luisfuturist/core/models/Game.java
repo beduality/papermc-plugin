@@ -196,6 +196,7 @@ public class Game implements Listener, Handler {
     private void joinPhase(User user, Phase phase) {
         playerSet.add(user);
 
+        onJoin(user);
         phase.onJoin(user);
 
         for (var feature : phase.getFeatures()) {
@@ -206,11 +207,12 @@ public class Game implements Listener, Handler {
     private void leavePhase(User user, Phase phase) {
         playerSet.remove(user);
 
-        phase.onLeave(user);
-
         for (var feature : phase.getFeatures()) {
             feature.onLeave(user);
         }
+
+        phase.onLeave(user);
+        onLeave(user);
     }
 
     public void joinGlobal(User user) {
@@ -250,5 +252,13 @@ public class Game implements Listener, Handler {
         phase.setGame(this);
         phase.onCreate();
         return phase;
+    }
+
+    public void onJoin(User user) {
+
+    }
+
+    public void onLeave(User user) {
+
     }
 }

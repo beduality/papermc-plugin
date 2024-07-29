@@ -42,7 +42,7 @@ task cleanPlugins() {
     delete fileTree(dir: "../server/plugins", include: "Randomizer*.jar")
 }
 
-task buildmv(dependsOn: ['shadowJar', 'cleanPlugins'], type: Copy) {
+task buildmv(dependsOn: ['clean', 'shadowJar', 'cleanPlugins'], type: Copy) {
     from "${buildDir}/libs"
     into "../server/plugins"
 }

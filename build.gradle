@@ -5,7 +5,7 @@ plugins {
     id "io.freefair.lombok" version "8.6"
 }
 
-group = "com.luisfuturist" // TODO improve it
+group = "io.github.beduality"
 
 repositories {
     mavenCentral()
@@ -23,23 +23,23 @@ java {
 }
 
 bukkit {
-    name = "Randomizer"
+    name = "BED"
     version = project.version
-    main = "com.luisfuturist.core.CorePlugin" // TODO improve it
-    description = "A Randomizer UHC plugin"
-    apiVersion = "1.16"
-    author = "Luis Emidio"
-    website = "https://github.com/beduality/randomizer"
+    main = "io.github.beduality.core.CorePlugin"
+    description = "BED PaperMC plugin"
+    apiVersion = "1.20"
+    author = "Block-Entity Duality Team"
+    website = "https://github.com/beduality/papermc-plugin"
 }
 
 shadowJar {
-   archiveBaseName.set('Randomizer')
+   archiveBaseName.set('BED')
    archiveClassifier.set('')
    archiveVersion.set(project.version)
 }
 
 task cleanPlugins() {
-    delete fileTree(dir: "../server/plugins", include: "Randomizer*.jar")
+    delete fileTree(dir: "../server/plugins", include: "BED*.jar")
 }
 
 task buildmv(dependsOn: ['clean', 'shadowJar', 'cleanPlugins'], type: Copy) {

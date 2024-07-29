@@ -1,1 +1,1 @@
-# Randomizer
+# BED PaperMC Plugin

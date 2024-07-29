@@ -1,10 +1,12 @@
 package io.github.beduality.core.phases;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;
 
 import io.github.beduality.core.Bed;
 import io.github.beduality.core.features.ClearInventoryFeature;
+import io.github.beduality.core.features.GameModeFeature;
 import io.github.beduality.core.features.HealthFeature;
 import io.github.beduality.core.features.NoBlockBreakFeature;
 import io.github.beduality.core.features.NoBlockPlaceFeature;
@@ -46,6 +48,7 @@ public class LobbyPhase extends Phase {
                 new NoItemDropFeature(),
                 new HealthFeature(),
                 new NoHungerLossFeature(),
+                new GameModeFeature(GameMode.ADVENTURE),
                 new NoTimeChangeFeature(world, 6000L),
                 new NoWeatherChangeFeature(world, WeatherType.CLEAR),
                 new ClearInventoryFeature());

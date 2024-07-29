@@ -15,6 +15,18 @@ public class HubBoardFeature extends BoardFeature {
         getObjective().displayName(displayName);
     }
 
+    private void updateBoard() {
+        var orchestrator = getPhase().getGame().getOrchestrator();
+        
+        var playersNum = orchestrator.getGlobal().getPlayers().size();
+        var maxPlayers = orchestrator.getGlobal().getMaxPlayers();
+
+        setLines(new String[] {
+                ChatColor.GRAY + "Online",
+                playersNum + "/" + maxPlayers
+        });
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,15 +39,9 @@ public class HubBoardFeature extends BoardFeature {
         updateBoard();
     }
 
-    public void updateBoard() {
-        var orchestrator = getPhase().getGame().getOrchestrator();
-        
-        var playersNum = orchestrator.getGlobal().getPlayers().size();
-        var maxPlayers = orchestrator.getGlobal().getMaxPlayers();
-
-        setLines(new String[] {
-                ChatColor.GRAY + "Online",
-                playersNum + "/" + maxPlayers
-        });
+    @Override
+    public void onLeave(User user) {
+        super.onLeave(user);
+        updateBoard();
     }
 }

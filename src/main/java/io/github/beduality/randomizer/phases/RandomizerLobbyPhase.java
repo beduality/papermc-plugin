@@ -26,9 +26,11 @@ public class RandomizerLobbyPhase extends LobbyPhase {
                 .append(Component.text("Randomizer")).asComponent();
 
         boardFeature.getObjective().displayName(displayName);
+    }
 
+    private void updateBoard() {
         var playersNum = getGame().getPlayers().size();
-        var maxPlayers = 2;
+        var maxPlayers = getGame().getMaxPlayers();
 
         boardFeature.setLines(new String[] {
                 "Waiting for players",
@@ -83,11 +85,13 @@ public class RandomizerLobbyPhase extends LobbyPhase {
     public void onJoin(User user) {
         super.onJoin(user);
         countdownFeature.showBossBar(user);
+        updateBoard();
     }
 
     @Override
     public void onLeave(User user) {
         super.onLeave(user);
         countdownFeature.hideBossBar(user);
+        updateBoard();
     }
 }

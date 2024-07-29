@@ -11,6 +11,7 @@ import com.luisfuturist.core.features.NoBlockPlaceFeature;
 import com.luisfuturist.core.features.NoDamageFeature;
 import com.luisfuturist.core.features.NoHungerLossFeature;
 import com.luisfuturist.core.features.NoInteractFeature;
+import com.luisfuturist.core.features.NoItemDropFeature;
 import com.luisfuturist.core.features.NoTimeChangeFeature;
 import com.luisfuturist.core.features.NoWeatherChangeFeature;
 import com.luisfuturist.core.features.SpawnFeature;
@@ -36,12 +37,13 @@ public class LobbyPhase extends Phase {
         var locationManager = Bed.locationManager;
         location = locationManager.getLocation("lobby");
         var world = location.getWorld();
-        
+
         createAndAddFeatures(
                 new NoDamageFeature(),
                 new NoBlockBreakFeature(),
                 new NoBlockPlaceFeature(),
                 new NoInteractFeature(),
+                new NoItemDropFeature(),
                 new HealthFeature(),
                 new NoHungerLossFeature(),
                 new NoTimeChangeFeature(world, 6000L),
@@ -51,15 +53,16 @@ public class LobbyPhase extends Phase {
         setAllowSpectate(false);
 
         var lobbyLocation = locationManager.getLocation("lobby");
-        
-        if(lobbyLocation != null) {
+
+        if (lobbyLocation != null) {
             var spawnFeature = new SpawnFeature();
             spawnFeature.setLocation(lobbyLocation);
             createAndAddFeature(spawnFeature);
 
             createAndAddFeature(new VoidSpawnTeleportFeature(spawnFeature));
         } else {
-            Bed.plugin.getLogger().warning("Hub | Spawn feature in " + getName() + " phase is not available due to the lack of location config.");
+            Bed.plugin.getLogger().warning("Hub | Spawn feature in " + getName()
+                    + " phase is not available due to the lack of location config.");
         }
     }
 

@@ -9,31 +9,24 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.luisfuturist.core.models.Feature;
+import com.luisfuturist.core.features.InventoryItemFeature;
 import com.luisfuturist.core.models.Game;
-import com.luisfuturist.core.models.User;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-public class GameMenuFeature extends Feature {
-
-    private ItemStack menuItem;
+public class GameMenuFeature extends InventoryItemFeature {
 
     private ItemStack generateMenuItem() {
         var item = new ItemStack(Material.CHEST, 1);
 
         var meta = item.getItemMeta();
-        var displayName = Component.text("Game Menu").color(NamedTextColor.YELLOW);
+        var displayName = Component.text("[A] Game Menu").color(NamedTextColor.YELLOW);
         meta.displayName(displayName);
 
         item.setItemMeta(meta);
 
         return item;
-    }
-
-    private void giveMenuItem(Player player) {
-        player.getInventory().addItem(menuItem);
     }
 
     private void openGameMenu(Player player) {
@@ -75,43 +68,19 @@ public class GameMenuFeature extends Feature {
 
     @Override
     public void onCreate() {
-        menuItem = generateMenuItem();
-    }
-
-    @Override
-    public void onEnable() {
-        super.onEnable();
-
-        getPhase().getGame().getPlayers().forEach(user -> {
-            giveMenuItem(user.getPlayer());
-        });
-    }
-
-    @Override
-    public void onJoin(User user) {
-        super.onJoin(user);
-
-        giveMenuItem(user.getPlayer());
+        setItemStack(generateMenuItem());
+        setSlotIndex(0);
+        super.onCreate();
     }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        var player = event.getPlayer();
-
-        if (!isPlaying(player)) {
+        if(!event.getAction().isRightClick() || !hasClicked(event)) {
             return;
         }
 
-        var item = event.getItem();
-
-        if (item == null || !item.hasItemMeta() || !event.getAction().isRightClick()) {
-            return;
-        }
-
-        if (item.isSimilar(menuItem)) {
-            event.setCancelled(true);
-            openGameMenu(player);
-        }
+        event.setCancelled(true);
+        openGameMenu(event.getPlayer());
     }
 
     @EventHandler

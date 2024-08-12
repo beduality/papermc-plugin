@@ -12,10 +12,14 @@ repositories {
     maven {
         url "https://repo.papermc.io/repository/maven-public/"
     }
+    maven {
+        url = "https://repo.aikar.co/content/groups/aikar/"
+    }
 }
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT"
+    implementation "co.aikar:acf-paper:0.5.0-SNAPSHOT"
 }
 
 java {
@@ -39,10 +43,10 @@ shadowJar {
 }
 
 task cleanPlugins() {
-    delete fileTree(dir: "../server/plugins", include: "BED*.jar")
+    delete fileTree(dir: "../server/data/plugins", include: "BED*.jar")
 }
 
 task buildmv(dependsOn: ['clean', 'shadowJar', 'cleanPlugins'], type: Copy) {
     from "${buildDir}/libs"
-    into "../server/plugins"
+    into "../server/data/plugins"
 }

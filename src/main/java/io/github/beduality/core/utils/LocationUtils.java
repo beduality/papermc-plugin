@@ -3,8 +3,14 @@ package io.github.beduality.core.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 public class LocationUtils {
+
+    public static String stringify(Location location) {
+        return location.getWorld().getName() + " " + location.getX() + " " + location.getY() + " " + location.getZ() + " " + location.getYaw() + " " + location.getPitch();
+    }
 
     public static Location fromString(String line) {
         String[] argArray = line.split(" ");
@@ -39,5 +45,15 @@ public class LocationUtils {
         }
 
         return new Location(world, x, y, z, yaw, pitch);
+    }
+
+    public static Location getCenterLocation(Block plateBlock, Player player) {
+        var plateLocation = plateBlock.getLocation();
+        var playerLocation = player.getLocation();
+
+        playerLocation.setX(plateLocation.getBlockX() + 0.5);
+        playerLocation.setZ(plateLocation.getBlockZ() + 0.5);
+
+        return playerLocation;
     }
 }

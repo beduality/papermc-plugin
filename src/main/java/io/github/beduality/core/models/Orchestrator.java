@@ -3,9 +3,14 @@ package io.github.beduality.core.models;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
+import org.bukkit.event.HandlerList;
+
+import io.github.beduality.core.Bed;
 import lombok.Getter;
 
-public class Orchestrator implements Handler {
+public class Orchestrator implements Handler, Listener {
 
     @Getter
     private Game global;
@@ -30,6 +35,8 @@ public class Orchestrator implements Handler {
 
     @Override
     public void onEnable() {
+        Bukkit.getPluginManager().registerEvents(this, Bed.plugin);
+
         for (var game : games.values())
             game.onEnable();
 
@@ -74,6 +81,8 @@ public class Orchestrator implements Handler {
             if (o != null)
                 o.onDisable();
         }
+
+        HandlerList.unregisterAll(this);
     }
 
     public Game addGame(Game game) {
@@ -104,6 +113,16 @@ public class Orchestrator implements Handler {
         return game.isPlaying(user);
     }
 
+    public boolean isPlaying(User user) {
+        for (var game : games.values()) {
+            if (game.isPlaying(user)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void join(User user, String gameName) {
         var game = games.get(gameName);
 
@@ -128,5 +147,10 @@ public class Orchestrator implements Handler {
         game.setOrchestrator(this);
         game.onCreate();
         return game;
+    }
+
+    public void onFinish(Game game) {
+        game.onDisable();
+        removeGame(game);
     }
 }

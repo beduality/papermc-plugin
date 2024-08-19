@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.Material;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -192,6 +193,15 @@ public class Game implements Listener, Handler {
         onFinish();
     }
 
+    public void win() {
+        onWin();
+        finish();
+    }
+
+    public void onWin() {
+
+    }
+
     private void joinPhase(User user, Phase phase) {
         playerSet.add(user);
 
@@ -244,7 +254,9 @@ public class Game implements Listener, Handler {
     }
 
     public boolean isPlaying(User user) {
-        return playerSet.contains(user);
+        return playerSet
+            .stream()
+            .anyMatch(u -> u.getPlayer().getUniqueId().equals(user.getPlayer().getUniqueId()));
     }
 
     public <T extends Phase> T createPhase(T phase) {
@@ -259,5 +271,13 @@ public class Game implements Listener, Handler {
 
     public void onLeave(User user) {
 
+    }
+
+    public User getUser(Player player) {
+        return getPlayers()
+                .stream()
+                .filter(u -> u.getPlayer().getUniqueId().equals(player.getUniqueId()))
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -40,6 +40,11 @@ public class InventoryItemFeature extends Feature {
         addItem(user.getPlayer());
     }
 
+    @Override
+    public void onLeave(User user) {
+        user.getPlayer().getInventory().clear(slotIndex);
+    }
+
     public boolean hasClicked(PlayerInteractEvent event) {
         var player = event.getPlayer();
 
@@ -54,5 +59,13 @@ public class InventoryItemFeature extends Feature {
         }
 
         return item.isSimilar(itemStack);
+    }
+
+    public boolean hasRightClicked(PlayerInteractEvent event) {
+        return hasClicked(event) && event.getAction().isRightClick();
+    }
+
+    public boolean hasLeftClicked(PlayerInteractEvent event) {
+        return hasClicked(event) && event.getAction().isLeftClick();
     }
 }

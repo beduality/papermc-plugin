@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -85,5 +86,9 @@ public abstract class Phase implements Listener, Joinable, Timed {
         for (var feature : features) {
             addFeature(feature);
         }
+    }
+
+    public User getUser(Player player) {
+        return getGame().getUser(player);
     }
 }

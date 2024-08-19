@@ -8,3 +8,4 @@
 - Added game-phase-feature system
 - Added hub
 - Added randomizer feature
+- Added parkour hub mini-game

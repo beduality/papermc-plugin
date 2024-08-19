@@ -13,12 +13,12 @@ public class CheckpointUtils {
             Map<String, EulerAngles> directions) {
         var checkpoint = LocationUtils.fromString(checkpointString);
         var direction = directions.get(checkpointString);
-        checkpoint.setPitch(direction.getPitch());
-        checkpoint.setYaw(direction.getYaw());
+        checkpoint.setPitch(direction.pitch());
+        checkpoint.setYaw(direction.yaw());
         return checkpoint;
     }
 
-    public static String stringify(Location location) {
+    public static String stringifyCheckpoint(Location location) {
         return location.getWorld().getName() + " " + location.getX() + " " + (int) location.getY() + " " + location.getZ()
                 + " ";
     }

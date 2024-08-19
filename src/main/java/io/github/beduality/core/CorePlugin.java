@@ -4,6 +4,9 @@ import java.util.Random;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import co.aikar.commands.PaperCommandManager;
+import io.github.beduality.core.commands.HubCommand;
+
 import io.github.beduality.core.managers.ItemManager;
 import io.github.beduality.core.managers.LocationManager;
 import io.github.beduality.core.managers.UserManager;
@@ -29,8 +32,17 @@ public class CorePlugin extends JavaPlugin {
         Randomizer.onLoad(); // TODO refactor into a standalone plugin
     }
     
+    private void loadCommands() {
+        var manager = new PaperCommandManager(this);
+        manager.enableUnstableAPI("help");
+        
+        manager.registerCommand(new HubCommand());
+    }
+    
     @Override
     public void onEnable() {
+        //loadCommands();
+
         if(Bed.orchestrator != null) {
             Bed.orchestrator.onEnable();
         }

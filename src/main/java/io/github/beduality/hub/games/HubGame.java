@@ -4,15 +4,18 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import io.github.beduality.core.Bed;
 import io.github.beduality.core.features.InventoryItemFeature;
 import io.github.beduality.core.features.PlayerListFeature;
-import io.github.beduality.core.phases.LobbyPhase;
 import io.github.beduality.core.models.Game;
+import io.github.beduality.core.models.User;
+import io.github.beduality.core.phases.LobbyPhase;
 import io.github.beduality.hub.features.GameMenuFeature;
 import io.github.beduality.hub.features.HubBoardFeature;
-import io.github.beduality.parkour.features.ParkourJoinFeature;
+import io.github.beduality.parkour.orchestrators.ParkourOrchestrator;
 import io.github.beduality.rps.features.RpsFeature;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -47,7 +50,12 @@ public class HubGame extends Game {
         lobbyPhase.createAndAddFeature(new HubBoardFeature());
         lobbyPhase.createAndAddFeature(new InventoryItemFeature(rpsItem, 8));
         lobbyPhase.createAndAddFeature(new RpsFeature(rpsItem));
-        lobbyPhase.createAndAddFeature(new ParkourJoinFeature());
+        lobbyPhase.createAndAddFeature(Bed.createOrchestratorAsFeature(new ParkourOrchestrator() {
+            @Override
+            public User getUser(Player player) {
+                return HubGame.this.getUser(player);
+            }
+        }));
 
         var header = Component.text("Block-Entity Duality\n").color(NamedTextColor.AQUA);
         var footer = Component.text("\nProbabilistically fun.").color(NamedTextColor.WHITE);

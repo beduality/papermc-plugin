@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import io.github.beduality.core.Bed;
+import io.github.beduality.core.utils.ClassUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -34,10 +35,12 @@ public class Game implements Listener, Handler {
     @Getter
     @Setter
     private Phase firstPhase;
+    @Getter
+    @Setter
+    private Phase winPhase;
 
     @Getter
     private boolean isRunning;
-    @Getter
     @Setter
     private String name;
 
@@ -47,6 +50,14 @@ public class Game implements Listener, Handler {
 
     @Setter
     private ItemStack icon;
+
+    public String getName() {
+        if (name == null) {
+            name = ClassUtils.getCleanName(this, "Game");
+        }
+
+        return name;
+    }
 
     public ItemStack getIcon() {
         if (icon == null) {
@@ -115,6 +126,8 @@ public class Game implements Listener, Handler {
         isRunning = false;
 
         disableCurrentPhase();
+
+        getPlayers().forEach(this::leave);
 
         Bed.plugin.getLogger().info("Core | " + getName() + " | Game has ended.");
     }
@@ -195,11 +208,18 @@ public class Game implements Listener, Handler {
 
     public void win() {
         onWin();
-        finish();
     }
 
     public void onWin() {
+        if(winPhase == null) {
+            return;
+        }
 
+        currentPhase.setRunning(false);
+        Bed.plugin.getLogger()
+                .info("Core | " + getName() + " | Phase " + currentPhase.getName() + " has ended.");
+
+        runPhase(winPhase);
     }
 
     private void joinPhase(User user, Phase phase) {
@@ -255,8 +275,8 @@ public class Game implements Listener, Handler {
 
     public boolean isPlaying(User user) {
         return playerSet
-            .stream()
-            .anyMatch(u -> u.getPlayer().getUniqueId().equals(user.getPlayer().getUniqueId()));
+                .stream()
+                .anyMatch(u -> u.getPlayer().getUniqueId().equals(user.getPlayer().getUniqueId()));
     }
 
     public <T extends Phase> T createPhase(T phase) {

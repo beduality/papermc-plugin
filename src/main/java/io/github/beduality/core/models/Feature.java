@@ -3,7 +3,7 @@ package io.github.beduality.core.models;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
-import io.github.beduality.core.utils.StringUtils;
+import io.github.beduality.core.utils.ClassUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public abstract class Feature implements Listener, Handler, Joinable {
 
     public String getName() {
         if(name == null) {
-            name = StringUtils.removeSuffix(getClass().getName(), "Feature");
+            name = ClassUtils.getCleanName(this, "Feature");
         }
 
         return name;

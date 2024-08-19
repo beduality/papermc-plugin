@@ -24,10 +24,6 @@ public class InventoryItemFeature extends Feature {
         this.itemStack = itemStack;
     }
 
-    private void addItem(Player player) {
-        player.getInventory().setItem(slotIndex, itemStack);
-    }
-
     @Override
     public void onEnable() {
         getPhase().getGame().getPlayers().forEach(user -> {
@@ -42,7 +38,22 @@ public class InventoryItemFeature extends Feature {
 
     @Override
     public void onLeave(User user) {
-        user.getPlayer().getInventory().clear(slotIndex);
+        clearItem(user.getPlayer());
+    }
+
+    @Override
+    public void onDisable() {
+        getPhase().getGame().getPlayers().forEach(user -> {
+            clearItem(user.getPlayer());
+        });
+    }
+
+    private void addItem(Player player) {
+        player.getInventory().setItem(slotIndex, itemStack);
+    }
+
+    private void clearItem(Player player) {
+        player.getInventory().clear(slotIndex);
     }
 
     public boolean hasClicked(PlayerInteractEvent event) {

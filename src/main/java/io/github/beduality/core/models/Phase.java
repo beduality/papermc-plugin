@@ -3,16 +3,16 @@ package io.github.beduality.core.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
+import io.github.beduality.core.utils.ClassUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 public abstract class Phase implements Listener, Joinable, Timed {
 
-    @Getter
     @Setter
     private String name;
     private List<Feature> features = new ArrayList<>();
@@ -38,6 +38,14 @@ public abstract class Phase implements Listener, Joinable, Timed {
     @Getter
     @Setter
     private boolean allowSpectate = true;
+
+    public String getName() {
+        if(name == null) {
+            name = ClassUtils.getCleanName(this, "Phase");
+        }
+
+        return name;
+    }
 
     public void onCreate() {
         

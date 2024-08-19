@@ -17,56 +17,24 @@ import org.bukkit.scheduler.BukkitTask;
 import io.github.beduality.core.Bed;
 import io.github.beduality.core.models.Orchestrator;
 import io.github.beduality.core.models.User;
-import io.github.beduality.parkour.features.ParkourFeature;
 import io.github.beduality.parkour.games.ParkourGame;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class ParkourOrchestrator extends Orchestrator {
 
-    private Set<UUID> recentlyLeft = new HashSet<>();
     private BukkitTask leaveTask;
+    private Set<UUID> recentlyLeft = new HashSet<>();
 
-    private void play(User user, Block plate) {
-        var parkourFeature = new ParkourFeature();
-        parkourFeature.setPlate(plate);
+    @Override
+    public void onDisable() {
+        recentlyLeft.clear();
+        
+        if (leaveTask != null) {
+            leaveTask.cancel();
+        }
 
-        var game = createGame(new ParkourGame(parkourFeature, user) {
-
-            @Override
-            public void onCreate() {
-                super.onCreate();
-                setName(getName() + "|" + user.getPlayer().getUniqueId());
-            }
-
-            @Override
-            public void onGiveUp(User user) {
-                var player = user.getPlayer();
-                recentlyLeft.add(player.getUniqueId());
-
-                leaveTask = new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        recentlyLeft.remove(player.getUniqueId());
-                    }
-                }.runTaskLater(Bed.plugin, 20L * 3);
-            }
-
-            @Override
-            public void onDisable() {
-                super.onDisable();
-
-                if (leaveTask != null) {
-                    leaveTask.cancel();
-                }
-            }
-        });
-
-        addGame(game);
-        game.onEnable();
-        game.start(game.getFirstPhase());
-
-        game.play(user);
+        super.onDisable();
     }
 
     @EventHandler
@@ -87,13 +55,37 @@ public class ParkourOrchestrator extends Orchestrator {
                 return;
             }
 
-            player.sendMessage(Component.text("You have joined the parkour.").color(NamedTextColor.YELLOW));
-
             play(user, plate);
         }
     }
 
     public User getUser(Player player) {
         return null;
+    }
+
+    private void play(User user, Block plate) {
+        var game = createGame(new ParkourGame(plate) {
+
+            @Override
+            public void onGiveUp(User user) {
+                var player = user.getPlayer();
+                recentlyLeft.add(player.getUniqueId());
+
+                leaveTask = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        recentlyLeft.remove(player.getUniqueId());
+                    }
+                }.runTaskLater(Bed.plugin, 20L * 3);
+            }
+        });
+
+        addGame(game);
+        game.onEnable();
+        game.start(game.getFirstPhase());
+
+        game.play(user);
+
+        user.getPlayer().sendMessage(Component.text("You have joined the parkour.").color(NamedTextColor.YELLOW));
     }
 }

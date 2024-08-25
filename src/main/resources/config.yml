@@ -1,5 +1,6 @@
 locations:
   lobby: world 0.5 2 0.5
+  spleef: world 1000.5 100 0.5
 items:
   - STONE
   - COBBLESTONE

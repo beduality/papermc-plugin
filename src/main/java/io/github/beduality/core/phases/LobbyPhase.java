@@ -42,9 +42,9 @@ public class LobbyPhase extends Phase {
 
         createAndAddFeatures(
                 new NoDamageFeature(),
-                new NoBlockBreakFeature(),
-                new NoBlockPlaceFeature(),
-                new NoInteractFeature(),
+                //new NoBlockBreakFeature(),
+                //new NoBlockPlaceFeature(),
+                //new NoInteractFeature(),
                 new NoItemDropFeature(),
                 new HealthFeature(),
                 new NoHungerLossFeature(),

@@ -21,9 +21,9 @@ public class GracePhase extends Phase {
             new HealthFeature(),
             new RemovePotionEffectsFeature(),
             new ClearInventoryFeature(),
-            new GameModeFeature(GameMode.SURVIVAL),
-            new RandomDropFeature());
-        setDuration(Constants.TPS * 60 * 5);
+            new GameModeFeature(GameMode.SURVIVAL)
+            );
+        setDuration(Constants.TPS * 10);
         setAllowJoin(true);
     }
 }

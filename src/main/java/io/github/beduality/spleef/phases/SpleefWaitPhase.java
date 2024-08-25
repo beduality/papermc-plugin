@@ -4,6 +4,7 @@ import io.github.beduality.core.Constants;
 import io.github.beduality.core.features.LobbyTimerFeature;
 import io.github.beduality.core.models.User;
 import io.github.beduality.core.phases.LobbyPhase;
+import io.github.beduality.spleef.games.SpleefGame;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -23,7 +24,7 @@ public class SpleefWaitPhase extends LobbyPhase {
     public void onCreate() {
         super.onCreate();
         setName("SpleefWait");
-        countdownFeature.setDuration(2400);
+        countdownFeature.setDuration(120);
 
         countdownFeature.setBeginningName(Component.text("Waiting for players").color(NamedTextColor.YELLOW));
         createAndAddFeature(countdownFeature);
@@ -35,6 +36,9 @@ public class SpleefWaitPhase extends LobbyPhase {
         getGame().getPlayers().forEach(user -> {
             countdownFeature.showBossBar(user);
         });
+
+        var game = (SpleefGame) getGame();
+        game.getArena().onEnable();
     }
 
     @Override
